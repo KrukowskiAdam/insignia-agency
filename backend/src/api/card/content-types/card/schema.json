@@ -18,7 +18,8 @@
         "Block_DescText",
         "Block_Video",
         "Block_Image"
-      ]
+      ],
+      "required": true
     },
     "column": {
       "type": "enumeration",
@@ -26,7 +27,8 @@
         "left",
         "middle",
         "right"
-      ]
+      ],
+      "required": true
     },
     "size": {
       "type": "enumeration",
@@ -34,45 +36,28 @@
         "small",
         "medium",
         "large"
-      ]
-    },
-    "footerTitle": {
-      "type": "string"
-    },
-    "footerDescription": {
-      "type": "string"
-    },
-    "buttonText": {
-      "type": "string"
-    },
-    "buttonColor": {
-      "type": "enumeration",
-      "enum": [
-        "red",
-        "blue",
-        "green"
-      ]
-    },
-    "buttonLink": {
-      "type": "string"
-    },
-    "buttonLinkType": {
-      "type": "enumeration",
-      "enum": [
-        "none",
-        "external", 
-        "internal"
       ],
-      "default": "none"
+      "required": true
     },
-    "buttonLinkValue": {
-      "type": "string"
+    "order": {
+      "type": "integer",
+      "unique": false
     },
     "titleLine1": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "titleLine2": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "titleColor": {
       "type": "enumeration",
@@ -91,42 +76,61 @@
     "category": {
       "type": "string"
     },
+    "imageSrc": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageAlt": {
+      "type": "string"
+    },
     "videoWebm": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "videos"
       ]
     },
     "videoMp4": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
+        "videos"
       ]
     },
-    "imageSrc": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
-    "imageAlt": {
+    "buttonText": {
       "type": "string"
     },
-    "order": {
-      "type": "integer",
-      "unique": false
+    "buttonColor": {
+      "type": "enumeration",
+      "enum": [
+        "red",
+        "blue",
+        "green"
+      ]
+    },
+    "buttonLinkType": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "external", 
+        "internal"
+      ],
+      "default": "none"
+    },
+    "buttonLinkValue": {
+      "type": "string"
+    },
+    "buttonLink": {
+      "type": "string"
+    },
+    "footerTitle": {
+      "type": "string"
+    },
+    "footerDescription": {
+      "type": "string"
     }
   }
 }
