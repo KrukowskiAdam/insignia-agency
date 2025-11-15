@@ -1,6 +1,10 @@
 import type { PageLoad } from './$types';
 import { PUBLIC_PAYLOAD_URL } from '$env/static/public';
 
+// Disable SSR to avoid CORS errors during build
+export const ssr = false;
+export const prerender = false;
+
 const API_URL = PUBLIC_PAYLOAD_URL || 'http://localhost:3000';
 
 type CardType = 'BigText' | 'DescText' | 'Video' | 'Image';
