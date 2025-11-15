@@ -9,3 +9,5 @@ services:
       command: npm run start
     variables:
       NODE_ENV: production
+      DATABASE_CLIENT: postgres
+      DATABASE_SSL: true
