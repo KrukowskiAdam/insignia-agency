@@ -60,7 +60,9 @@ interface StrapiResponse {
 
 export const load: PageLoad = async ({ fetch }) => {
 	try {
-		const response = await fetch(`${STRAPI_URL}/api/cards?populate=*&sort=order:asc`);
+		// Add timestamp to prevent caching issues
+		const timestamp = Date.now();
+		const response = await fetch(`${STRAPI_URL}/api/cards?populate=*&sort=order:asc&_t=${timestamp}`);
 		
 		if (!response.ok) {
 			console.error('Failed to fetch cards:', response.statusText);
