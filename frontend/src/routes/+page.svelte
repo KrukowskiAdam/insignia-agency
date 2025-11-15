@@ -22,21 +22,21 @@
 	const projects = data.cards;
 
 	// Helper functions for buttonLink validation
-	function isExternalLink(link: string | null | undefined): boolean {
-		if (!link) return false;
-		return link.startsWith('http://') || link.startsWith('https://');
+	function isExternalLink(linkType: string, linkValue: string): boolean {
+		return linkType === 'external' && Boolean(linkValue && linkValue.trim() !== '');
 	}
 
-	function getValidLink(link: string | null | undefined): string {
-		if (!link) return '#';
+	function getValidLink(linkType: string, linkValue: string): string {
+		if (linkType === 'none' || !linkValue || !linkValue.trim()) return '#';
 		
-		// External links (http/https)
-		if (isExternalLink(link)) return link;
+		const trimmedValue = linkValue.trim();
 		
-		// Internal links (start with /)
-		if (link.startsWith('/')) return link;
+		if (linkType === 'external') {
+			return trimmedValue;
+		} else if (linkType === 'internal') {
+			return trimmedValue;
+		}
 		
-		// Invalid or empty - fallback to #
 		return '#';
 	}
 
@@ -176,13 +176,13 @@
 									<span class="footer-title">{project.footerTitle}</span>
 								</div>
 								<a 
-									href={getValidLink(project.buttonLink)} 
+									href={getValidLink(project.buttonLinkType, project.buttonLinkValue)} 
 									class="footer-button" 
 									class:button-red={project.buttonColor === 'red'}
 									class:button-blue={project.buttonColor === 'blue'}
 									class:button-green={project.buttonColor === 'green'}
-									target={isExternalLink(project.buttonLink) ? '_blank' : '_self'}
-									rel={isExternalLink(project.buttonLink) ? 'noopener noreferrer' : ''}
+									target={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? '_blank' : '_self'}
+									rel={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? 'noopener noreferrer' : ''}
 								>
 									{project.buttonText}
 								</a>

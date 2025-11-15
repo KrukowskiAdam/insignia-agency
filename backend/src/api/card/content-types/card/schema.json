@@ -53,9 +53,18 @@
         "green"
       ]
     },
-    "buttonLink": {
-      "type": "string",
-      "regex": "^(https?:\\/\\/[^\\s]+|\\/[^\\s]*|\\s*)$"
+    "buttonLinkType": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "external", 
+        "internal"
+      ],
+      "default": "none",
+      "required": true
+    },
+    "buttonLinkValue": {
+      "type": "string"
     },
     "titleLine1": {
       "type": "string"
