@@ -17,6 +17,9 @@
 
 	console.log('Cards from data:', data.cards);
 	console.log('Environment check - PUBLIC_STRAPI_URL:', import.meta.env.PUBLIC_STRAPI_URL);
+	
+	// Debug info for production
+	let debugInfo = `Cards count: ${data.cards.length}, ENV: ${import.meta.env.PUBLIC_STRAPI_URL || 'undefined'}`;
 
 	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
@@ -86,6 +89,11 @@
 </script>
 
 <div class="projects-page">
+	<!-- DEBUG INFO -->
+	<div style="position: fixed; top: 0; left: 0; background: red; color: white; padding: 5px; z-index: 9999; font-size: 12px;">
+		{debugInfo}
+	</div>
+	
 	<div class="grid">
 		{#each columns as column, colIndex}
 			<div 
