@@ -15,13 +15,26 @@ export default factories.createCoreController('api::card.card', ({ strapi }) => 
 }));
 
 function validateButtonLink(data: any) {
+  const buttonText = data.buttonText;
   const linkType = data.buttonLinkType;
   const linkValue = data.buttonLinkValue;
   
-  if (linkType === 'none') {
-    // No link required - clear value
+  // If no button text, force link type to 'none'
+  if (!buttonText || !buttonText.trim()) {
+    data.buttonLinkType = 'none';
     data.buttonLinkValue = '';
     return;
+  }
+  
+  // If there's button text but link type is still 'none', that's OK
+  if (linkType === 'none') {
+    data.buttonLinkValue = '';
+    return;
+  }
+  
+  // If link type is set but no button text, that's an error
+  if (linkType !== 'none' && (!buttonText || !buttonText.trim())) {
+    throw new Error('Button text is required when button link is set');
   }
   
   if (!linkValue || !linkValue.trim()) {
