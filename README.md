@@ -2,7 +2,7 @@
 
 Stack: **SvelteKit** + **Strapi** + **Vercel**
 
-## 📁 Struktura projektu
+## 📁 Struktura projekt
 
 ```
 INSIGNIA/
