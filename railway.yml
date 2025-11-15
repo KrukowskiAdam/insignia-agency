@@ -1,8 +1,0 @@
-version: 2
-services:
-  web:
-    source: ./backend
-    variables:
-      NODE_ENV: production
-      DATABASE_CLIENT: postgres
-      DATABASE_SSL: true
