@@ -20,4 +20,4 @@ COPY backend/ ./
 EXPOSE $PORT
 
 # Build at runtime when env vars are available, then start
-CMD ["sh", "-c", "echo 'Building Strapi with runtime env vars...' && npm run build && echo 'Starting Strapi...' && npm start"]
+CMD ["sh", "-c", "echo 'Building Strapi with increased memory limit...' && npm run build && echo 'Starting Strapi...' && npm start"]
