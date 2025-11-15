@@ -107,43 +107,6 @@ export interface AdminApiTokenPermission extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface AdminAuditLog extends Struct.CollectionTypeSchema {
-  collectionName: 'strapi_audit_logs';
-  info: {
-    displayName: 'Audit Log';
-    pluralName: 'audit-logs';
-    singularName: 'audit-log';
-  };
-  options: {
-    draftAndPublish: false;
-    timestamps: false;
-  };
-  pluginOptions: {
-    'content-manager': {
-      visible: false;
-    };
-    'content-type-builder': {
-      visible: false;
-    };
-  };
-  attributes: {
-    action: Schema.Attribute.String & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'admin::audit-log'> &
-      Schema.Attribute.Private;
-    payload: Schema.Attribute.JSON;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
-  };
-}
-
 export interface AdminPermission extends Struct.CollectionTypeSchema {
   collectionName: 'admin_permissions';
   info: {
@@ -480,35 +443,53 @@ export interface ApiCardCard extends Struct.CollectionTypeSchema {
   attributes: {
     buttonColor: Schema.Attribute.Enumeration<['red', 'blue', 'green']>;
     buttonLink: Schema.Attribute.String;
+    buttonLinkType: Schema.Attribute.Enumeration<
+      ['none', 'external', 'internal']
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
+    buttonLinkValue: Schema.Attribute.String;
     buttonText: Schema.Attribute.String;
     category: Schema.Attribute.String;
-    column: Schema.Attribute.Enumeration<['left', 'middle', 'right']>;
+    column: Schema.Attribute.Enumeration<['left', 'middle', 'right']> &
+      Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Blocks;
     Enumeration: Schema.Attribute.Enumeration<
       ['Block_BigText', 'Block_DescText', 'Block_Video', 'Block_Image']
-    >;
+    > &
+      Schema.Attribute.Required;
     footerDescription: Schema.Attribute.String;
     footerTitle: Schema.Attribute.String;
     imageAlt: Schema.Attribute.String;
-    imageSrc: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    imageSrc: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::card.card'> &
       Schema.Attribute.Private;
     order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
-    size: Schema.Attribute.Enumeration<['small', 'medium', 'large']>;
+    size: Schema.Attribute.Enumeration<['small', 'medium', 'large']> &
+      Schema.Attribute.Required;
     title: Schema.Attribute.String;
     titleColor: Schema.Attribute.Enumeration<['red', 'blue', 'green']>;
-    titleLine1: Schema.Attribute.String;
-    titleLine2: Schema.Attribute.String;
+    titleLine1: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    titleLine2: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    videoMp4: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    videoWebm: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    videoMp4: Schema.Attribute.Media<'videos'>;
+    videoWebm: Schema.Attribute.Media<'videos'>;
   };
 }
 
@@ -1016,7 +997,6 @@ declare module '@strapi/strapi' {
     export interface ContentTypeSchemas {
       'admin::api-token': AdminApiToken;
       'admin::api-token-permission': AdminApiTokenPermission;
-      'admin::audit-log': AdminAuditLog;
       'admin::permission': AdminPermission;
       'admin::role': AdminRole;
       'admin::session': AdminSession;
