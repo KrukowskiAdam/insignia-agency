@@ -54,7 +54,8 @@
       ]
     },
     "buttonLink": {
-      "type": "string"
+      "type": "string",
+      "regex": "^(https?:\\/\\/[^\\s]+|\\/[^\\s]*|\\s*)$"
     },
     "titleLine1": {
       "type": "string"
