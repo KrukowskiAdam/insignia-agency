@@ -13,6 +13,9 @@ RUN npm ci
 # Copy application code
 COPY backend/ ./
 
+# Copy production environment file
+COPY backend/.env.production .env
+
 # Build the application
 RUN npm run build
 
@@ -22,5 +25,9 @@ RUN npm prune --production
 # Expose port
 EXPOSE $PORT
 
-# Start the application
-CMD ["npm", "start"]
+# Debug environment variables
+RUN echo "Node version:" && node --version
+RUN echo "NPM version:" && npm --version
+
+# Start the application with debug
+CMD ["sh", "-c", "echo 'Environment check:' && echo 'NODE_ENV:' $NODE_ENV && echo 'DATABASE_URL exists:' && test -n '$DATABASE_URL' && echo 'Yes' || echo 'No' && npm start"]
