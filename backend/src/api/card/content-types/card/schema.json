@@ -53,6 +53,9 @@
         "green"
       ]
     },
+    "buttonLink": {
+      "type": "string"
+    },
     "buttonLinkType": {
       "type": "enumeration",
       "enum": [
@@ -60,8 +63,7 @@
         "external", 
         "internal"
       ],
-      "default": "none",
-      "required": true
+      "default": "none"
     },
     "buttonLinkValue": {
       "type": "string"

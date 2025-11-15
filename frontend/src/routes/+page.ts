@@ -114,14 +114,14 @@ export const load: PageLoad = async ({ fetch }) => {
 					...baseCard,
 					type: 'BigText' as const,
 					titleLine1: item.titleLine1 || '',
-					titleLine2: item.titleLine2,
+					titleLine2: item.titleLine2 || '',
 					titleColor: item.titleColor || 'red'
 				};
 			} else if (type === 'DescText') {
 				return {
 					...baseCard,
 					type: 'DescText' as const,
-					title: item.title,
+					title: item.title || '',
 					description: extractText(item.description)
 				};
 			} else if (type === 'Video') {
