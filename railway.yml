@@ -1,7 +1,13 @@
 version: 2
 services:
   strapi:
-    source: .
+    source: ./backend
+    build:
+      command: npm install && npm run build
+      watchPatterns:
+        - backend/**
+    start:
+      command: npm start
     healthcheck:
       command: "curl -f http://localhost:$PORT/admin || exit 1"
       interval: 30s
