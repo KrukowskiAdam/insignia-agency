@@ -1,20 +1,11 @@
+$schema: https://railway.app/railway.schema.json
 version: 2
 services:
-  strapi:
+  web:
     source: ./backend
     build:
-      command: npm install && npm run build
-      watchPatterns:
-        - backend/**
+      command: npm ci && npm run build
     start:
-      command: npm start
-    healthcheck:
-      command: "curl -f http://localhost:$PORT/admin || exit 1"
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      command: npm run start
     variables:
       NODE_ENV: production
-      DATABASE_CLIENT: postgres
-      DATABASE_SSL: true
-    # Railway will automatically provide PostgreSQL database
