@@ -260,19 +260,13 @@
 
 	/* Card Slider Container */
 	.card-slider {
-		width: 200%;
+		width: 100%;
 		height: 100%;
 		display: flex;
-		transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
 		position: relative;
 		container-type: inline-size;
-		will-change: transform;
 		margin-left: -1px;
 		backface-visibility: hidden;
-	}
-
-	.card-slider.open {
-		transform: translateX(-50%) translateZ(0);
 	}
 
 	/* Card Content bez slidera */

@@ -12,7 +12,7 @@
 </script>
 
 <div class="image-card-container">
-	<div class="slider-image">
+	<div class="slider-image" class:slide-out={isOpen}>
 		<img 
 			src={imageSrc} 
 			alt={imageAlt}
@@ -28,18 +28,27 @@
 
 <style>
 	.image-card-container {
-		width: 200%;
+		width: 100%;
 		height: 100%;
+		position: relative;
 		display: flex;
 	}
 
 	.slider-image {
-		width: 50%;
+		width: 100%;
 		height: 100%;
-		position: relative;
-		flex-shrink: 0;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
 		overflow: hidden;
 		border-radius: 8px;
+		transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+		will-change: transform;
+	}
+
+	.slider-image.slide-out {
+		transform: translateX(-100%);
 	}
 
 	.card-image {
@@ -60,7 +69,7 @@
 	}
 
 	.slider-content {
-		width: 50%;
+		width: 100%;
 		height: 100%;
 		background: white;
 		padding: 2rem;
@@ -68,8 +77,10 @@
 		flex-direction: column;
 		justify-content: center;
 		gap: 1rem;
-		flex-shrink: 0;
+		position: relative;
+		z-index: 1;
 		overflow-y: auto;
+		border-radius: 8px;
 	}
 
 	.category {
