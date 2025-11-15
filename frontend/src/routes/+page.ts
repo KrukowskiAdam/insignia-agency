@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
 import { PUBLIC_STRAPI_URL } from '$env/static/public';
 
-const STRAPI_URL = PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const API_URL = PUBLIC_STRAPI_URL || 'http://localhost:3000';
 
 type CardType = 'BigText' | 'DescText' | 'Video' | 'Image';
 
@@ -52,63 +52,51 @@ interface ImageCard extends BaseCard {
 
 export type Card = BigTextCard | DescTextCard | VideoCard | ImageCard;
 
-interface StrapiResponse {
-	data: {
-		id: number;
-		attributes: any;
-	}[];
+interface PayloadResponse {
+	docs: any[];
+	totalDocs: number;
+	limit: number;
+	totalPages: number;
+	page: number;
+	pagingCounter: number;
+	hasPrevPage: boolean;
+	hasNextPage: boolean;
+	prevPage: number | null;
+	nextPage: number | null;
 }
 
 export const load: PageLoad = async ({ fetch }) => {
 	try {
-		// Add timestamp to prevent caching issues
-		const timestamp = Date.now();
-		const response = await fetch(`${STRAPI_URL}/api/cards?populate=*&sort=order:asc&_t=${timestamp}`);
+		const response = await fetch(`${API_URL}/api/cards?sort=order&limit=100`);
 		
 		if (!response.ok) {
 			console.error('Failed to fetch cards:', response.statusText);
 			return { cards: [] };
 		}
 
-		const json: StrapiResponse = await response.json();
+		const json: PayloadResponse = await response.json();
 		
-		// Return empty if no data
-		if (!json.data || json.data.length === 0) {
+		if (!json.docs || json.docs.length === 0) {
 			return { cards: [] };
 		}
 		
-		const cards: Card[] = json.data.map((item: any) => {
-			// Extract type from Enumeration (e.g., "Block_BigText" -> "BigText")
+		const cards: Card[] = json.docs.map((item: any) => {
 			const type = item.Enumeration?.replace('Block_', '') as CardType;
 			
-			// Helper to convert Strapi Rich Text to plain text
-			const extractText = (richText: any): string => {
-				if (!richText) return '';
-				if (typeof richText === 'string') return richText;
-				if (Array.isArray(richText)) {
-					return richText.map(block => 
-						block.children?.map((child: any) => child.text || '').join('') || ''
-					).join('\n');
-				}
-				return '';
-			};
-			
-			// Base fields
 			const baseCard = {
 				id: item.id,
 				type,
 				column: item.column,
 				size: item.size,
-				footerTitle: item.footerTitle,
-				footerDescription: item.footerDescription,
-				buttonText: item.buttonText,
-				buttonColor: item.buttonColor,
+				footerTitle: item.footerTitle || '',
+				footerDescription: item.footerDescription || '',
+				buttonText: item.buttonText || '',
+				buttonColor: item.buttonColor || 'red',
 				buttonLinkType: item.buttonLinkType || 'none',
 				buttonLinkValue: item.buttonLinkValue || '',
 				order: item.order || 0
 			};
 
-			// Type-specific fields
 			if (type === 'BigText') {
 				return {
 					...baseCard,
@@ -122,33 +110,32 @@ export const load: PageLoad = async ({ fetch }) => {
 					...baseCard,
 					type: 'DescText' as const,
 					title: item.title || '',
-					description: extractText(item.description)
+					description: item.description || ''
 				};
 			} else if (type === 'Video') {
+				const videoWebmUrl = item.videoWebm?.url || '';
+				const videoMp4Url = item.videoMp4?.url || '';
+				
 				return {
 					...baseCard,
 					type: 'Video' as const,
-				videoWebm: item.videoWebm?.url 
-					? (item.videoWebm.url.startsWith('http') ? item.videoWebm.url : `${STRAPI_URL}${item.videoWebm.url}`) 
-					: '',
-				videoMp4: item.videoMp4?.url 
-					? (item.videoMp4.url.startsWith('http') ? item.videoMp4.url : `${STRAPI_URL}${item.videoMp4.url}`) 
-					: '',
+					videoWebm: videoWebmUrl.startsWith('http') ? videoWebmUrl : `${API_URL}${videoWebmUrl}`,
+					videoMp4: videoMp4Url.startsWith('http') ? videoMp4Url : `${API_URL}${videoMp4Url}`,
 					category: item.category || '',
 					title: item.title || '',
-					description: extractText(item.description)
+					description: item.description || ''
 				};
 			} else if (type === 'Image') {
+				const imageSrcUrl = item.imageSrc?.url || '';
+				
 				return {
 					...baseCard,
 					type: 'Image' as const,
-				imageSrc: item.imageSrc?.url 
-					? (item.imageSrc.url.startsWith('http') ? item.imageSrc.url : `${STRAPI_URL}${item.imageSrc.url}`) 
-					: '',
+					imageSrc: imageSrcUrl.startsWith('http') ? imageSrcUrl : `${API_URL}${imageSrcUrl}`,
 					imageAlt: item.imageAlt || '',
 					category: item.category || '',
 					title: item.title || '',
-					description: extractText(item.description)
+					description: item.description || ''
 				};
 			}
 
