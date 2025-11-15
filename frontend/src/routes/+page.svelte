@@ -16,6 +16,7 @@
 	let { data }: Props = $props();
 
 	console.log('Cards from data:', data.cards);
+	console.log('Environment check - PUBLIC_STRAPI_URL:', import.meta.env.PUBLIC_STRAPI_URL);
 
 	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
