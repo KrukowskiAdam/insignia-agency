@@ -15,13 +15,11 @@
 
 	let { data }: Props = $props();
 
-	console.log('Cards from data:', data.cards);
-	console.log('Environment check - PUBLIC_STRAPI_URL:', import.meta.env.PUBLIC_STRAPI_URL);
-	
-	// Debug info for production
-	let debugInfo = `Cards count: ${data.cards.length}, ENV: ${import.meta.env.PUBLIC_STRAPI_URL || 'undefined'}`;
+    console.log('Cards from data:', data.cards);
+    console.log('Environment check - PUBLIC_STRAPI_URL:', import.meta.env.PUBLIC_STRAPI_URL);
 
-	let hoveredColumn = $state<number | null>(null);
+    // Debug info for production - using data from server-side
+    let debugInfo = `Cards count: ${data.cards.length}, Server loads from Strapi: ${data.cards.length > 0 ? 'YES' : 'NO'}`;                                                                              	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
 	let columnRefs: HTMLDivElement[] = [];
 
@@ -172,7 +170,7 @@
 									<span class="footer-title">{project.footerTitle}</span>
 								</div>
 								<a 
-									href={project.buttonLink} 
+									href={project.buttonLink.startsWith('http') ? project.buttonLink : '#'} 
 									class="footer-button" 
 									class:button-red={project.buttonColor === 'red'}
 									class:button-blue={project.buttonColor === 'blue'}
