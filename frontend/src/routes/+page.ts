@@ -124,12 +124,12 @@ export const load: PageLoad = async ({ fetch }) => {
 				return {
 					...baseCard,
 					type: 'Video' as const,
-					videoWebm: item.videoWebm?.url 
-						? `${STRAPI_URL}${item.videoWebm.url}` 
-						: '',
-					videoMp4: item.videoMp4?.url 
-						? `${STRAPI_URL}${item.videoMp4.url}` 
-						: '',
+				videoWebm: item.videoWebm?.url 
+					? (item.videoWebm.url.startsWith('http') ? item.videoWebm.url : `${STRAPI_URL}${item.videoWebm.url}`) 
+					: '',
+				videoMp4: item.videoMp4?.url 
+					? (item.videoMp4.url.startsWith('http') ? item.videoMp4.url : `${STRAPI_URL}${item.videoMp4.url}`) 
+					: '',
 					category: item.category || '',
 					title: item.title || '',
 					description: extractText(item.description)
@@ -138,9 +138,9 @@ export const load: PageLoad = async ({ fetch }) => {
 				return {
 					...baseCard,
 					type: 'Image' as const,
-					imageSrc: item.imageSrc?.url 
-						? `${STRAPI_URL}${item.imageSrc.url}` 
-						: '',
+				imageSrc: item.imageSrc?.url 
+					? (item.imageSrc.url.startsWith('http') ? item.imageSrc.url : `${STRAPI_URL}${item.imageSrc.url}`) 
+					: '',
 					imageAlt: item.imageAlt || '',
 					category: item.category || '',
 					title: item.title || '',
