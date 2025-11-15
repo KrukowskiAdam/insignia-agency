@@ -13,21 +13,11 @@ RUN npm ci
 # Copy application code
 COPY backend/ ./
 
-# Copy production environment file
-COPY backend/.env.production .env
-
-# Build the application
-RUN npm run build
-
-# Remove dev dependencies after build
-RUN npm prune --production
+# Don't build during Docker build - Railway env vars not available yet
+# Keep dev dependencies for runtime build
 
 # Expose port
 EXPOSE $PORT
 
-# Debug environment variables
-RUN echo "Node version:" && node --version
-RUN echo "NPM version:" && npm --version
-
-# Start the application with debug
-CMD ["sh", "-c", "echo 'Environment check:' && echo 'NODE_ENV:' $NODE_ENV && echo 'DATABASE_URL exists:' && test -n '$DATABASE_URL' && echo 'Yes' || echo 'No' && npm start"]
+# Build at runtime when env vars are available, then start
+CMD ["sh", "-c", "echo 'Building Strapi with runtime env vars...' && npm run build && echo 'Starting Strapi...' && npm start"]
