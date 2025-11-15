@@ -59,11 +59,6 @@ interface StrapiResponse {
 }
 
 export const load: PageLoad = async ({ fetch }) => {
-	console.log('=== DEBUG INFO ===');
-	console.log('PUBLIC_STRAPI_URL from env:', PUBLIC_STRAPI_URL);
-	console.log('STRAPI_URL being used:', STRAPI_URL);
-	console.log('Fetching from:', `${STRAPI_URL}/api/cards?populate=*&sort=order:asc`);
-	
 	try {
 		const response = await fetch(`${STRAPI_URL}/api/cards?populate=*&sort=order:asc`);
 		
@@ -74,11 +69,8 @@ export const load: PageLoad = async ({ fetch }) => {
 
 		const json: StrapiResponse = await response.json();
 		
-		console.log('Strapi response:', JSON.stringify(json, null, 2));
-		
 		// Return empty if no data
 		if (!json.data || json.data.length === 0) {
-			console.log('No cards found');
 			return { cards: [] };
 		}
 		
@@ -158,8 +150,6 @@ export const load: PageLoad = async ({ fetch }) => {
 
 			return baseCard as Card;
 		});
-		
-		console.log('Parsed cards:', cards);
 
 		return { cards };
 	} catch (error) {

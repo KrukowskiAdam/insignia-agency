@@ -15,18 +15,11 @@
 
 	let { data }: Props = $props();
 
-    console.log('Cards from data:', data.cards);
-    console.log('Environment check - PUBLIC_STRAPI_URL:', import.meta.env.PUBLIC_STRAPI_URL);
-
-    // Debug info for production - using data from server-side
-    let debugInfo = `Cards count: ${data.cards.length}, Server loads from Strapi: ${data.cards.length > 0 ? 'YES' : 'NO'}`;                                                                              	let hoveredColumn = $state<number | null>(null);
+	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
 	let columnRefs: HTMLDivElement[] = [];
 
 	const projects = data.cards;
-	
-	console.log('Projects:', projects);
-	console.log('Projects length:', projects.length);
 
 	// Grupowanie projektów według kolumn
 	const columns = [
@@ -86,13 +79,7 @@
 	};
 </script>
 
-<div class="projects-page">
-	<!-- DEBUG INFO -->
-	<div style="position: fixed; top: 0; left: 0; background: red; color: white; padding: 5px; z-index: 9999; font-size: 12px;">
-		{debugInfo}
-	</div>
-	
-	<div class="grid">
+<div class="projects-page">	<div class="grid">
 		{#each columns as column, colIndex}
 			<div 
 				class="column"
