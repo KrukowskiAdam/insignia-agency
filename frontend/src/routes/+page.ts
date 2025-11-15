@@ -14,7 +14,8 @@ interface BaseCard {
 	footerDescription: string;
 	buttonText: string;
 	buttonColor: 'red' | 'blue' | 'green';
-	buttonLink: string;
+	buttonLinkType: 'none' | 'external' | 'internal';
+	buttonLinkValue: string;
 	order: number;
 }
 
@@ -102,7 +103,8 @@ export const load: PageLoad = async ({ fetch }) => {
 				footerDescription: item.footerDescription,
 				buttonText: item.buttonText,
 				buttonColor: item.buttonColor,
-				buttonLink: item.buttonLink,
+				buttonLinkType: item.buttonLinkType || 'none',
+				buttonLinkValue: item.buttonLinkValue || '',
 				order: item.order || 0
 			};
 

@@ -15,16 +15,28 @@ export default factories.createCoreController('api::card.card', ({ strapi }) => 
 }));
 
 function validateButtonLink(data: any) {
-  if (!data.buttonLink) return; // Empty is OK
+  const linkType = data.buttonLinkType;
+  const linkValue = data.buttonLinkValue;
   
-  const link = data.buttonLink.trim();
-  if (!link) return; // Empty after trim is OK
+  if (linkType === 'none') {
+    // No link required - clear value
+    data.buttonLinkValue = '';
+    return;
+  }
   
-  const isExternalLink = /^https?:\/\/.+/.test(link);
-  const isInternalLink = /^\//.test(link);
-  const isStrapiMedia = /^https:\/\/.*\.strapiapp\.com\//.test(link) || /^https:\/\/.*\.media\.strapiapp\.com\//.test(link);
+  if (!linkValue || !linkValue.trim()) {
+    throw new Error(`Button link value is required when type is "${linkType}"`);
+  }
   
-  if (!isExternalLink && !isInternalLink && !isStrapiMedia) {
-    throw new Error('Invalid buttonLink format. Use: external links (https://...), internal links (/path), or leave empty.');
+  const trimmedValue = linkValue.trim();
+  
+  if (linkType === 'external') {
+    if (!trimmedValue.startsWith('http://') && !trimmedValue.startsWith('https://')) {
+      throw new Error('External links must start with http:// or https://');
+    }
+  } else if (linkType === 'internal') {
+    if (!trimmedValue.startsWith('/')) {
+      throw new Error('Internal links must start with / (e.g., /about, /contact)');
+    }
   }
 }
