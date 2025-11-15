@@ -157,13 +157,13 @@
 									<span class="footer-title">{project.footerTitle}</span>
 								</div>
 								<a 
-									href={project.buttonLink.startsWith('http') ? project.buttonLink : '#'} 
+									href={project.buttonLink && project.buttonLink.startsWith('http') ? project.buttonLink : '#'} 
 									class="footer-button" 
 									class:button-red={project.buttonColor === 'red'}
 									class:button-blue={project.buttonColor === 'blue'}
 									class:button-green={project.buttonColor === 'green'}
-									target={project.buttonLink.startsWith('http') ? '_blank' : '_self'}
-									rel={project.buttonLink.startsWith('http') ? 'noopener noreferrer' : ''}
+									target={project.buttonLink && project.buttonLink.startsWith('http') ? '_blank' : '_self'}
+									rel={project.buttonLink && project.buttonLink.startsWith('http') ? 'noopener noreferrer' : ''}
 								>
 									{project.buttonText}
 								</a>
