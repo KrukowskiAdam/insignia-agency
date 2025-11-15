@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
-import { PUBLIC_STRAPI_URL } from '$env/static/public';
+import { PUBLIC_PAYLOAD_URL } from '$env/static/public';
 
-const API_URL = PUBLIC_STRAPI_URL || 'http://localhost:3000';
+const API_URL = PUBLIC_PAYLOAD_URL || 'http://localhost:3000';
 
 type CardType = 'BigText' | 'DescText' | 'Video' | 'Image';
 
