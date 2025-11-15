@@ -42,12 +42,14 @@ export default buildConfig({
     'http://localhost:3000',
     'https://*.vercel.app',
     'https://frontend-9av66b71p-isnisgnias-projects.vercel.app',
+    'https://frontend-bcwf0hq9d-isnisgnias-projects.vercel.app',
   ],
   csrf: [
     'http://localhost:5173',
     'http://localhost:3000',
     'https://*.vercel.app',
     'https://frontend-9av66b71p-isnisgnias-projects.vercel.app',
+    'https://frontend-bcwf0hq9d-isnisgnias-projects.vercel.app',
   ],
   plugins: [
     // storage-adapter-placeholder
