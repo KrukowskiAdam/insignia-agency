@@ -13,11 +13,14 @@ RUN npm ci
 # Copy application code
 COPY backend/ ./
 
-# Don't build during Docker build - Railway env vars not available yet
-# Keep dev dependencies for runtime build
+# Copy pre-built admin panel (built locally)
+COPY backend/dist/build ./build
+
+# Remove dev dependencies - we have pre-built admin panel
+RUN npm prune --production
 
 # Expose port
 EXPOSE $PORT
 
-# Build at runtime when env vars are available, then start
-CMD ["sh", "-c", "echo 'Building Strapi with increased memory limit...' && npm run build && echo 'Starting Strapi...' && npm start"]
+# Start directly - no build needed
+CMD ["npm", "start"]
