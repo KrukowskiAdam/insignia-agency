@@ -175,17 +175,19 @@
 									<img src="/dot.svg" alt="" class="footer-dot" />
 									<span class="footer-title">{project.footerTitle}</span>
 								</div>
-								<a 
-									href={getValidLink(project.buttonLinkType, project.buttonLinkValue)} 
-									class="footer-button" 
-									class:button-red={project.buttonColor === 'red'}
-									class:button-blue={project.buttonColor === 'blue'}
-									class:button-green={project.buttonColor === 'green'}
-									target={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? '_blank' : '_self'}
-									rel={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? 'noopener noreferrer' : ''}
-								>
-									{project.buttonText}
-								</a>
+								{#if project.buttonText && project.buttonText.trim()}
+									<a 
+										href={getValidLink(project.buttonLinkType, project.buttonLinkValue)} 
+										class="footer-button" 
+										class:button-red={project.buttonColor === 'red'}
+										class:button-blue={project.buttonColor === 'blue'}
+										class:button-green={project.buttonColor === 'green'}
+										target={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? '_blank' : '_self'}
+										rel={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? 'noopener noreferrer' : ''}
+									>
+										{project.buttonText}
+									</a>
+								{/if}
 							</div>
 							<h4 class="footer-description">{project.footerDescription}</h4>
 						</div>
