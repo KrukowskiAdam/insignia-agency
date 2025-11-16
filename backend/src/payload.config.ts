@@ -1,4 +1,5 @@
 // storage-adapter-import-placeholder
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -10,6 +11,8 @@ import sharp from 'sharp'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Cards } from './collections/Cards'
+import { Menu } from './collections/Menu'
+import { Pages } from './collections/Pages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Cards],
+  collections: [Users, Media, Cards, Menu, Pages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -40,18 +43,25 @@ export default buildConfig({
   cors: [
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://backend-isnisgnias-projects.vercel.app',
+    'https://backend-six-xi-22.vercel.app',
+    'https://frontend-isnisgnias-projects.vercel.app',
     'https://*.vercel.app',
-    'https://frontend-9av66b71p-isnisgnias-projects.vercel.app',
-    'https://frontend-bcwf0hq9d-isnisgnias-projects.vercel.app',
   ],
   csrf: [
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://backend-isnisgnias-projects.vercel.app',
+    'https://backend-six-xi-22.vercel.app',
+    'https://frontend-isnisgnias-projects.vercel.app',
     'https://*.vercel.app',
-    'https://frontend-9av66b71p-isnisgnias-projects.vercel.app',
-    'https://frontend-bcwf0hq9d-isnisgnias-projects.vercel.app',
   ],
   plugins: [
-    // storage-adapter-placeholder
+    vercelBlobStorage({
+      collections: {
+        media: true,
+      },
+      token: process.env.PAYLOAD_BLOB_READ_WRITE_TOKEN || '',
+    }),
   ],
 })
