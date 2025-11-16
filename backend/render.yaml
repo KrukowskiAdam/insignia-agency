@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: insignia-backend
+    runtime: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URI
+        sync: false
+      - key: PAYLOAD_SECRET
+        sync: false
+      - key: PAYLOAD_BLOB_READ_WRITE_TOKEN
+        sync: false
+      - key: NODE_ENV
+        value: production
