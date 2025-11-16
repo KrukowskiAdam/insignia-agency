@@ -85,7 +85,7 @@ interface PayloadResponse {
 export const load: PageLoad = async ({ fetch }) => {
 	try {
 		// Fetch homepage
-		const pageResponse = await fetch(`${API_URL}/api/pages?where[isHomepage][equals]=true&where[_status][equals]=published`);
+		const pageResponse = await fetch(`${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`);
 		let homepage: Page | null = null;
 		
 		if (pageResponse.ok) {
