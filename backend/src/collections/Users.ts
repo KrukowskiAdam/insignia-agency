@@ -6,7 +6,6 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: {
-    disableLocalStrategy: false,
     verify: false, // Disable email verification for now
   },
   hooks: {
