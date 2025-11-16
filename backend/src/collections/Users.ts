@@ -7,6 +7,20 @@ export const Users: CollectionConfig = {
   },
   auth: {
     disableLocalStrategy: false,
+    verify: false, // Disable email verification for now
+  },
+  hooks: {
+    afterLogin: [
+      ({ user }) => {
+        console.log('[USER LOGIN] User logged in:', (user as any)?.email, 'Role:', (user as any)?.role)
+        return user
+      },
+    ],
+    afterLogout: [
+      ({ user }) => {
+        console.log('[USER LOGOUT] User logged out:', (user as any)?.email)
+      },
+    ],
   },
   access: {
     // Allow first user creation without authentication

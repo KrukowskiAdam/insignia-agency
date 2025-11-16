@@ -9,16 +9,25 @@ export const Menu: CollectionConfig = {
   access: {
     read: () => true, // Public read access
     create: ({ req: { user } }) => {
+      console.log('[MENU ACCESS] Create attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      return ['admin', 'editor'].includes((user as any).role)
+      const hasAccess = ['admin', 'editor'].includes((user as any).role)
+      console.log('[MENU ACCESS] Create access:', hasAccess)
+      return hasAccess
     },
     update: ({ req: { user } }) => {
+      console.log('[MENU ACCESS] Update attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      return ['admin', 'editor'].includes((user as any).role)
+      const hasAccess = ['admin', 'editor'].includes((user as any).role)
+      console.log('[MENU ACCESS] Update access:', hasAccess)
+      return hasAccess
     },
     delete: ({ req: { user } }) => {
+      console.log('[MENU ACCESS] Delete attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      return (user as any).role === 'admin'
+      const hasAccess = (user as any).role === 'admin'
+      console.log('[MENU ACCESS] Delete access:', hasAccess)
+      return hasAccess
     },
   },
   fields: [
