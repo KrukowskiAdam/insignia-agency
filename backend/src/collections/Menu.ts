@@ -7,27 +7,18 @@ export const Menu: CollectionConfig = {
     defaultColumns: ['label', 'url', 'order'],
   },
   access: {
-    read: () => true, // Public read access
+    read: () => true,
     create: ({ req: { user } }) => {
-      console.log('[MENU ACCESS] Create attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[MENU ACCESS] Create access:', hasAccess)
-      return hasAccess
+      return ['admin', 'editor'].includes((user as any).role)
     },
     update: ({ req: { user } }) => {
-      console.log('[MENU ACCESS] Update attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[MENU ACCESS] Update access:', hasAccess)
-      return hasAccess
+      return ['admin', 'editor'].includes((user as any).role)
     },
     delete: ({ req: { user } }) => {
-      console.log('[MENU ACCESS] Delete attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = (user as any).role === 'admin'
-      console.log('[MENU ACCESS] Delete access:', hasAccess)
-      return hasAccess
+      return (user as any).role === 'admin'
     },
   },
   fields: [

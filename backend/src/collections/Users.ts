@@ -5,41 +5,16 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  auth: {
-    verify: false, // Disable email verification for now
-  },
-  hooks: {
-    afterLogin: [
-      ({ user }) => {
-        console.log('[USER LOGIN] User logged in:', (user as any)?.email, 'Role:', (user as any)?.role)
-        return user
-      },
-    ],
-    afterLogout: [
-      ({ user }) => {
-        console.log('[USER LOGOUT] User logged out:', (user as any)?.email)
-      },
-    ],
-  },
+  auth: true,
   access: {
-    // Allow first user creation without authentication
-    create: ({ req }) => {
-      // If no user is logged in, allow creation (for first admin setup)
-      return true
-    },
+    create: () => true,
     read: () => true,
     update: ({ req: { user } }) => {
-      // Users can update themselves, admins can update anyone
       if (!user) return false
       if ((user as any).role === 'admin') return true
-      return {
-        id: {
-          equals: user.id,
-        },
-      }
+      return { id: { equals: user.id } }
     },
     delete: ({ req: { user } }) => {
-      // Only admins can delete users
       if (!user) return false
       return (user as any).role === 'admin'
     },

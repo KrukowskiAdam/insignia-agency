@@ -7,36 +7,18 @@ export const Cards: CollectionConfig = {
     defaultColumns: ['Enumeration', 'column', 'size', 'order'],
   },
   access: {
-    read: () => true, // Public read access for frontend
+    read: () => true,
     create: ({ req: { user } }) => {
-      console.log('[CARDS ACCESS] Create attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
-      if (!user) {
-        console.log('[CARDS ACCESS] BLOCKED: No user found')
-        return false
-      }
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[CARDS ACCESS] Create access:', hasAccess)
-      return hasAccess
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
     },
     update: ({ req: { user } }) => {
-      console.log('[CARDS ACCESS] Update attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
-      if (!user) {
-        console.log('[CARDS ACCESS] BLOCKED: No user found')
-        return false
-      }
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[CARDS ACCESS] Update access:', hasAccess)
-      return hasAccess
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
     },
     delete: ({ req: { user } }) => {
-      console.log('[CARDS ACCESS] Delete attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
-      if (!user) {
-        console.log('[CARDS ACCESS] BLOCKED: No user found')
-        return false
-      }
-      const hasAccess = (user as any).role === 'admin'
-      console.log('[CARDS ACCESS] Delete access:', hasAccess)
-      return hasAccess
+      if (!user) return false
+      return (user as any).role === 'admin'
     },
   },
   fields: [
