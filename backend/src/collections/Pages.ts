@@ -49,40 +49,62 @@ export const Pages: CollectionConfig = {
       ],
     },
     {
-      name: 'hero',
-      type: 'group',
-      fields: [
+      name: 'blocks',
+      type: 'blocks',
+      required: true,
+      blocks: [
         {
-          name: 'heading',
-          type: 'text',
-          admin: {
-            description: 'Main heading for the page',
-          },
+          slug: 'hero',
+          fields: [
+            {
+              name: 'heading',
+              type: 'text',
+              required: true,
+            },
+            {
+              name: 'subheading',
+              type: 'textarea',
+            },
+            {
+              name: 'backgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+            },
+          ],
         },
         {
-          name: 'subheading',
-          type: 'textarea',
-          admin: {
-            description: 'Subheading or description',
-          },
+          slug: 'content',
+          fields: [
+            {
+              name: 'text',
+              type: 'textarea',
+              required: true,
+            },
+          ],
         },
         {
-          name: 'backgroundImage',
-          type: 'upload',
-          relationTo: 'media',
-          admin: {
-            description: 'Hero background image (optional)',
-          },
+          slug: 'cards',
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              admin: {
+                description: 'Section title (optional)',
+              },
+            },
+            {
+              name: 'selectedCards',
+              type: 'relationship',
+              relationTo: 'cards',
+              hasMany: true,
+              required: true,
+              admin: {
+                description: 'Select cards to display in this section',
+              },
+            },
+          ],
         },
       ],
-    },
-    {
-      name: 'content',
-      type: 'textarea',
-      required: true,
-      admin: {
-        description: 'Main page content',
-      },
     },
     {
       name: 'seo',
