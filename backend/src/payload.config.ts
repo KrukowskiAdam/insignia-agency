@@ -53,20 +53,10 @@ export default buildConfig({
         },
       }),
   sharp,
-  cors: [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'https://backend-isnisgnias-projects.vercel.app',
-    'https://backend-six-xi-22.vercel.app',
-    'https://frontend-isnisgnias-projects.vercel.app',
-    'https://*.vercel.app',
-  ],
+  cors: '*',
   csrf: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://backend-isnisgnias-projects.vercel.app',
-    'https://backend-six-xi-22.vercel.app',
-    'https://frontend-isnisgnias-projects.vercel.app',
     'https://*.vercel.app',
   ],
   plugins: [
