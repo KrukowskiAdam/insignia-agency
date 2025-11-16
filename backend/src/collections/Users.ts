@@ -5,7 +5,32 @@ export const Users: CollectionConfig = {
   admin: {
     useAsTitle: 'email',
   },
-  auth: true,
+  auth: {
+    disableLocalStrategy: false,
+  },
+  access: {
+    // Allow first user creation without authentication
+    create: ({ req }) => {
+      // If no user is logged in, allow creation (for first admin setup)
+      return true
+    },
+    read: () => true,
+    update: ({ req: { user } }) => {
+      // Users can update themselves, admins can update anyone
+      if (!user) return false
+      if ((user as any).role === 'admin') return true
+      return {
+        id: {
+          equals: user.id,
+        },
+      }
+    },
+    delete: ({ req: { user } }) => {
+      // Only admins can delete users
+      if (!user) return false
+      return (user as any).role === 'admin'
+    },
+  },
   fields: [
     {
       name: 'role',
