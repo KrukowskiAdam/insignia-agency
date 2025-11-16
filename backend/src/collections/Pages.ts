@@ -8,27 +8,18 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'status', 'updatedAt'],
   },
   access: {
-    read: () => true, // Public read access
+    read: () => true,
     create: ({ req: { user } }) => {
-      console.log('[PAGES ACCESS] Create attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[PAGES ACCESS] Create access:', hasAccess)
-      return hasAccess
+      return ['admin', 'editor'].includes((user as any).role)
     },
     update: ({ req: { user } }) => {
-      console.log('[PAGES ACCESS] Update attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = ['admin', 'editor'].includes((user as any).role)
-      console.log('[PAGES ACCESS] Update access:', hasAccess)
-      return hasAccess
+      return ['admin', 'editor'].includes((user as any).role)
     },
     delete: ({ req: { user } }) => {
-      console.log('[PAGES ACCESS] Delete attempt - User:', user ? `${(user as any).email} (${(user as any).role})` : 'NO USER')
       if (!user) return false
-      const hasAccess = (user as any).role === 'admin'
-      console.log('[PAGES ACCESS] Delete access:', hasAccess)
-      return hasAccess
+      return (user as any).role === 'admin'
     },
   },
   hooks: {

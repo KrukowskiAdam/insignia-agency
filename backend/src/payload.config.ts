@@ -16,15 +16,6 @@ import { Pages } from './collections/Pages'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-console.log('=== PAYLOAD CONFIG DEBUG ===')
-console.log('DATABASE_URI exists:', !!process.env.DATABASE_URI)
-console.log('DATABASE_URI starts with mongodb:', process.env.DATABASE_URI?.startsWith('mongodb'))
-console.log('PAYLOAD_SECRET exists:', !!process.env.PAYLOAD_SECRET)
-console.log('PAYLOAD_SECRET length:', process.env.PAYLOAD_SECRET?.length)
-console.log('NODE_ENV:', process.env.NODE_ENV)
-console.log('Using adapter: mongoose')
-console.log('============================')
-
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -58,17 +49,15 @@ export default buildConfig({
   cors: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'http://localhost:10000',
     'https://*.vercel.app',
-    'https://insignia-agency.onrender.com',
+    'https://*.railway.app',
     'https://*.onrender.com',
   ],
   csrf: [
     'http://localhost:5173',
     'http://localhost:3000',
-    'http://localhost:10000',
     'https://*.vercel.app',
-    'https://insignia-agency.onrender.com',
+    'https://*.railway.app',
     'https://*.onrender.com',
   ],
   plugins: [
