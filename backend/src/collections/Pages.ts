@@ -1,16 +1,49 @@
 import type { CollectionConfig } from 'payload'
+import { formatSlug } from '../utils/formatSlug'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'status'],
+    defaultColumns: ['title', 'slug', 'updatedAt', '_status'],
+  },
+  versions: {
+    drafts: true,
+    maxPerDoc: 50, // Keep last 50 versions
   },
   access: {
     read: () => true, // Public read access
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => {
+      // Only admin and editor can create
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    update: ({ req: { user } }) => {
+      // Only admin and editor can update
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    delete: ({ req: { user } }) => {
+      // Only admin can delete
+      if (!user) return false
+      return (user as any).role === 'admin'
+    },
+  },
+  hooks: {
+    beforeChange: [
+      ({ data }) => {
+        // Auto-generate slug from title if slug is empty
+        if (data.title && !data.slug) {
+          data.slug = formatSlug(data.title)
+        }
+        return data
+      },
+    ],
+    afterChange: [
+      ({ doc, operation }) => {
+        console.log(`Page "${doc.title}" was ${operation}d`)
+      },
+    ],
   },
   fields: [
     {
@@ -27,7 +60,22 @@ export const Pages: CollectionConfig = {
       required: true,
       unique: true,
       admin: {
-        description: 'URL slug (e.g., "home", "o-nas", "kontakt"). Use "home" for homepage.',
+        description: 'URL slug - auto-generated from title if left empty (Polish chars converted)',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value, data }) => {
+            // Format slug on input
+            if (value) {
+              return formatSlug(value)
+            }
+            // Auto-generate from title if empty
+            if (!value && data?.title) {
+              return formatSlug(data.title)
+            }
+            return value
+          },
+        ],
       },
     },
     {
@@ -37,16 +85,6 @@ export const Pages: CollectionConfig = {
       admin: {
         description: 'Mark this page as the homepage (displayed at "/")',
       },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      required: true,
-      defaultValue: 'draft',
-      options: [
-        { label: 'Draft', value: 'draft' },
-        { label: 'Published', value: 'published' },
-      ],
     },
     {
       name: 'blocks',

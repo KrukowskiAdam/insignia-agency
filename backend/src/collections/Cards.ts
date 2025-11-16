@@ -8,9 +8,18 @@ export const Cards: CollectionConfig = {
   },
   access: {
     read: () => true, // Public read access for frontend
-    create: ({ req: { user } }) => !!user, // Only authenticated users can create
-    update: ({ req: { user } }) => !!user, // Only authenticated users can update
-    delete: ({ req: { user } }) => !!user, // Only authenticated users can delete
+    create: ({ req: { user } }) => {
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    update: ({ req: { user } }) => {
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    delete: ({ req: { user } }) => {
+      if (!user) return false
+      return (user as any).role === 'admin'
+    },
   },
   fields: [
     // Basic Configuration

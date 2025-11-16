@@ -23,6 +23,19 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Icon: {
+          path: '/components/Icon#Icon',
+        },
+        Logo: {
+          path: '/components/Logo#Logo',
+        },
+      },
+    },
+    meta: {
+      titleSuffix: '- Insignia',
+    },
   },
   collections: [Users, Media, Cards, Menu, Pages],
   editor: lexicalEditor(),
