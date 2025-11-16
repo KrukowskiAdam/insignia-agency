@@ -56,6 +56,19 @@ interface ImageCard extends BaseCard {
 
 export type Card = BigTextCard | DescTextCard | VideoCard | ImageCard;
 
+interface Page {
+	id: string;
+	title: string;
+	slug: string;
+	isHomepage: boolean;
+	hero?: {
+		heading?: string;
+		subheading?: string;
+		backgroundImage?: any;
+	};
+	content: string;
+}
+
 interface PayloadResponse {
 	docs: any[];
 	totalDocs: number;
@@ -71,14 +84,26 @@ interface PayloadResponse {
 
 export const load: PageLoad = async ({ fetch }) => {
 	try {
-		const response = await fetch(`${API_URL}/api/cards?sort=order&limit=100`);
+		// Fetch homepage
+		const pageResponse = await fetch(`${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`);
+		let homepage: Page | null = null;
 		
-		if (!response.ok) {
-			console.error('Failed to fetch cards:', response.statusText);
-			return { cards: [] };
+		if (pageResponse.ok) {
+			const pageData: PayloadResponse = await pageResponse.json();
+			if (pageData.docs && pageData.docs.length > 0) {
+				homepage = pageData.docs[0];
+			}
 		}
 
-		const json: PayloadResponse = await response.json();
+		// Fetch cards
+		const cardsResponse = await fetch(`${API_URL}/api/cards?sort=order&limit=100`);
+		
+		if (!cardsResponse.ok) {
+			console.error('Failed to fetch cards:', cardsResponse.statusText);
+			return { cards: [], homepage };
+		}
+
+		const json: PayloadResponse = await cardsResponse.json();
 		
 		if (!json.docs || json.docs.length === 0) {
 			return { cards: [] };
@@ -146,9 +171,9 @@ export const load: PageLoad = async ({ fetch }) => {
 			return baseCard as Card;
 		});
 
-		return { cards };
+		return { cards, homepage };
 	} catch (error) {
 		console.error('Error loading cards:', error);
-		return { cards: [] };
+		return { cards: [], homepage: null };
 	}
 };
