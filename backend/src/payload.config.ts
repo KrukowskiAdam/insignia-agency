@@ -43,15 +43,9 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: process.env.DATABASE_URI && (process.env.DATABASE_URI.startsWith('mongodb://') || process.env.DATABASE_URI.startsWith('mongodb+srv://'))
-    ? mongooseAdapter({
-        url: process.env.DATABASE_URI,
-      })
-    : sqliteAdapter({
-        client: {
-          url: process.env.DATABASE_URI || 'file:./payload.db',
-        },
-      }),
+  db: mongooseAdapter({
+    url: process.env.DATABASE_URI || 'mongodb://localhost/insignia',
+  }),
   sharp,
   cors: '*',
   csrf: [
