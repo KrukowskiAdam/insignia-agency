@@ -10,16 +10,23 @@
 	interface Props {
 		data: {
 			cards: Card[];
+			homepage: any;
 		}
 	}
 
 	let { data }: Props = $props();
 
+	// Use blocks from homepage if available, otherwise use hardcoded cards
+	const homepage = $derived(data.homepage);
+	const blocks = $derived(homepage?.blocks || []);
+	const useBlocks = $derived(blocks.length > 0);
+	
+	// Fallback to old card system if no blocks
+	const projects = $derived(!useBlocks ? data.cards : []);
+
 	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
 	let columnRefs: HTMLDivElement[] = [];
-
-	const projects = data.cards;
 
 	// Helper functions for buttonLink validation
 	function isExternalLink(linkType: string, linkValue: string): boolean {
@@ -40,12 +47,26 @@
 		return '#';
 	}
 
+	// Group cards by columns from blocks
+	function getCardsFromBlocks() {
+		const allCards: Card[] = [];
+		blocks.forEach((block: any) => {
+			if (block.blockType === 'cards' && block.selectedCards) {
+				allCards.push(...block.selectedCards);
+			}
+		});
+		return allCards;
+	}
+
+	const blockCards = $derived(useBlocks ? getCardsFromBlocks() : []);
+	const displayCards = $derived(useBlocks ? blockCards : projects);
+
 	// Grupowanie projektów według kolumn
-	const columns = [
-		projects.filter(p => p.column === 'left').sort((a, b) => a.order - b.order),
-		projects.filter(p => p.column === 'middle').sort((a, b) => a.order - b.order),
-		projects.filter(p => p.column === 'right').sort((a, b) => a.order - b.order)
-	];
+	const columns = $derived([
+		displayCards.filter(p => p.column === 'left').sort((a, b) => a.order - b.order),
+		displayCards.filter(p => p.column === 'middle').sort((a, b) => a.order - b.order),
+		displayCards.filter(p => p.column === 'right').sort((a, b) => a.order - b.order)
+	]);
 
 	onMount(() => {
 		// Initialize Lenis for each column
