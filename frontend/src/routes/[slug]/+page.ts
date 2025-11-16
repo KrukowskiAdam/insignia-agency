@@ -36,7 +36,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 	try {
 	const response = await fetch(
-		`${API_URL}/api/pages?where[slug][equals]=${slug}&where[_status][equals]=published`
+		`${API_URL}/api/pages?where[slug][equals]=${slug}&where[status][equals]=published`
 	);		if (!response.ok) {
 			throw error(response.status, `Failed to fetch page: ${response.statusText}`);
 		}
