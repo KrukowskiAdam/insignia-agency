@@ -8,9 +8,18 @@ export const Menu: CollectionConfig = {
   },
   access: {
     read: () => true, // Public read access
-    create: ({ req: { user } }) => !!user,
-    update: ({ req: { user } }) => !!user,
-    delete: ({ req: { user } }) => !!user,
+    create: ({ req: { user } }) => {
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    update: ({ req: { user } }) => {
+      if (!user) return false
+      return ['admin', 'editor'].includes((user as any).role)
+    },
+    delete: ({ req: { user } }) => {
+      if (!user) return false
+      return (user as any).role === 'admin'
+    },
   },
   fields: [
     {
