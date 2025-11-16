@@ -16,6 +16,16 @@
 
 	let { data }: Props = $props();
 
+	const API_URL = 'https://backend-isnisgnias-projects.vercel.app';
+
+	// Helper to get full media URL
+	function getMediaUrl(media: any): string {
+		if (!media) return '';
+		if (typeof media === 'string') return media.startsWith('http') ? media : `${API_URL}${media}`;
+		if (media.url) return media.url.startsWith('http') ? media.url : `${API_URL}${media.url}`;
+		return '';
+	}
+
 	// Use blocks from homepage if available, otherwise use hardcoded cards
 	const homepage = $derived(data.homepage);
 	const blocks = $derived(homepage?.blocks || []);
@@ -52,7 +62,15 @@
 		const allCards: Card[] = [];
 		blocks.forEach((block: any) => {
 			if (block.blockType === 'cards' && block.selectedCards) {
-				allCards.push(...block.selectedCards);
+				// Convert Payload format to frontend format
+				const convertedCards = block.selectedCards.map((card: any) => ({
+					...card,
+					type: card.Enumeration?.replace('Block_', '') || card.type,
+					imageSrc: getMediaUrl(card.imageSrc),
+					videoWebm: getMediaUrl(card.videoWebm),
+					videoMp4: getMediaUrl(card.videoMp4),
+				}));
+				allCards.push(...convertedCards);
 			}
 		});
 		return allCards;
