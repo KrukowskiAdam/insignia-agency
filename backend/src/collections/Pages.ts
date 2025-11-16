@@ -5,11 +5,7 @@ export const Pages: CollectionConfig = {
   slug: 'pages',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt', '_status'],
-  },
-  versions: {
-    drafts: true,
-    maxPerDoc: 50, // Keep last 50 versions
+    defaultColumns: ['title', 'slug', 'status', 'updatedAt'],
   },
   access: {
     read: () => true, // Public read access
@@ -85,6 +81,16 @@ export const Pages: CollectionConfig = {
       admin: {
         description: 'Mark this page as the homepage (displayed at "/")',
       },
+    },
+    {
+      name: 'status',
+      type: 'select',
+      required: true,
+      defaultValue: 'published',
+      options: [
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+      ],
     },
     {
       name: 'blocks',
