@@ -52,11 +52,21 @@ export default buildConfig({
     url: process.env.DATABASE_URI || 'mongodb://localhost/insignia',
   }),
   sharp,
-  cors: '*',
+  cors: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:10000',
+    'https://*.vercel.app',
+    'https://insignia-agency.onrender.com',
+    'https://*.onrender.com',
+  ],
   csrf: [
     'http://localhost:5173',
     'http://localhost:3000',
+    'http://localhost:10000',
     'https://*.vercel.app',
+    'https://insignia-agency.onrender.com',
+    'https://*.onrender.com',
   ],
   plugins: [
     vercelBlobStorage({
