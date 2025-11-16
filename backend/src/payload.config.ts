@@ -16,6 +16,12 @@ import { Pages } from './collections/Pages'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+console.log('=== PAYLOAD CONFIG DEBUG ===')
+console.log('DATABASE_URI exists:', !!process.env.DATABASE_URI)
+console.log('DATABASE_URI starts with mongodb:', process.env.DATABASE_URI?.startsWith('mongodb'))
+console.log('Using adapter: mongoose')
+console.log('============================')
+
 export default buildConfig({
   admin: {
     user: Users.slug,
