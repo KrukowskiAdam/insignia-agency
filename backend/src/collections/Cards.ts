@@ -5,21 +5,18 @@ export const Cards: CollectionConfig = {
   admin: {
     useAsTitle: 'Enumeration',
     defaultColumns: ['Enumeration', 'column', 'size', 'order'],
+    description: '📚 Component Library - Preview of available card types. Create actual cards in Pages → Blocks → Cards.',
+    readOnly: {
+      create: true,
+      update: true,
+      delete: true,
+    },
   },
   access: {
     read: () => true,
-    create: ({ req: { user } }) => {
-      if (!user) return false
-      return ['admin', 'editor'].includes((user as any).role)
-    },
-    update: ({ req: { user } }) => {
-      if (!user) return false
-      return ['admin', 'editor'].includes((user as any).role)
-    },
-    delete: ({ req: { user } }) => {
-      if (!user) return false
-      return (user as any).role === 'admin'
-    },
+    create: () => false,
+    update: () => false,
+    delete: () => false,
   },
   fields: [
     // Basic Configuration
