@@ -67,6 +67,7 @@ interface Page {
 		backgroundImage?: any;
 	};
 	content: string;
+	blocks?: any[];
 }
 
 interface PayloadResponse {
