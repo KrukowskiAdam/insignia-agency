@@ -1,5 +1,4 @@
 // storage-adapter-import-placeholder
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -63,13 +62,5 @@ export default buildConfig({
     'https://*.vercel.app',
     'https://*.railway.app',
     'https://*.onrender.com',
-  ],
-  plugins: [
-    vercelBlobStorage({
-      collections: {
-        media: true,
-      },
-      token: process.env.PAYLOAD_BLOB_READ_WRITE_TOKEN || '',
-    }),
   ],
 })
