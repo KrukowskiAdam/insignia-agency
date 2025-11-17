@@ -4,8 +4,9 @@
 
 ### 1. Przygotowanie
 - [x] Backend clean i zbudowany lokalnie
-- [x] Railway config (`railway.json`) utworzony
+- [x] Railway config (`railway.json`) utworzony w głównym katalogu
 - [x] `.env.example` zaktualizowany
+- [x] Dockerfile zoptymalizowany dla Railway
 
 ### 2. Deployment na Railway
 
@@ -18,11 +19,12 @@
    - Wybierz "Deploy from GitHub repo"
    - Wybierz: `KrukowskiAdam/insignia-agency`
 
-3. **Konfiguracja:**
-   - Railway automatycznie wykryje Next.js
-   - Root Directory: `/backend`
-   - Build Command: `npm install && npm run build`
-   - Start Command: `npm start`
+3. **Konfiguracja (automatyczna):**
+   - Railway automatycznie wykryje `railway.json` w głównym katalogu
+   - Builder: DOCKERFILE
+   - Dockerfile Path: `backend/Dockerfile`
+   - Docker Context: `backend/`
+   - ⚠️ **Nie musisz** ustawiać Root Directory ręcznie!
 
 4. **Dodaj Environment Variables:**
    ```
@@ -61,8 +63,14 @@
 
 ## Troubleshooting
 
-Jeśli build nie działa:
-1. Sprawdź czy Root Directory = `/backend`
-2. Zweryfikuj environment variables
-3. Sprawdź logi w Railway dashboard
-4. Upewnij się że MongoDB Atlas ma whitelisted IP: `0.0.0.0/0`
+### Build fails: "Dockerfile does not exist"
+✅ **Rozwiązane!** Użyj `railway.json` w głównym katalogu (nie w `/backend`)
+
+### Build fails: Sharp errors
+✅ **Rozwiązane!** Dockerfile ma workaround dla Alpine Linux
+
+### Inne problemy:
+1. Sprawdź czy wszystkie zmienne środowiskowe są ustawione
+2. Zweryfikuj MongoDB Atlas - whitelisted IP: `0.0.0.0/0`
+3. Sprawdź logi w Railway dashboard (realtime)
+4. Upewnij się że `railway.json` jest w głównym katalogu repo
