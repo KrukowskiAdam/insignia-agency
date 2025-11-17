@@ -140,6 +140,7 @@ export const Pages: CollectionConfig = {
                   name: 'Enumeration',
                   type: 'select',
                   required: true,
+                  defaultValue: 'Block_BigText',
                   options: [
                     { label: 'Big Text', value: 'Block_BigText' },
                     { label: 'Description Text', value: 'Block_DescText' },
@@ -151,6 +152,7 @@ export const Pages: CollectionConfig = {
                   name: 'column',
                   type: 'select',
                   required: true,
+                  defaultValue: 'left',
                   options: [
                     { label: 'Left', value: 'left' },
                     { label: 'Middle', value: 'middle' },
@@ -161,6 +163,7 @@ export const Pages: CollectionConfig = {
                   name: 'size',
                   type: 'select',
                   required: true,
+                  defaultValue: 'medium',
                   options: [
                     { label: 'Small', value: 'small' },
                     { label: 'Medium', value: 'medium' },
