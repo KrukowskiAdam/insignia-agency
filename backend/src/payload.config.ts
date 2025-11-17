@@ -12,6 +12,7 @@ import { Media } from './collections/Media'
 import { Cards } from './collections/Cards'
 import { Menu } from './collections/Menu'
 import { Pages } from './collections/Pages'
+import { Footer } from './collections/Footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,7 +37,7 @@ export default buildConfig({
       titleSuffix: '- Insignia',
     },
   },
-  collections: [Users, Media, Cards, Menu, Pages],
+  collections: [Users, Media, Cards, Menu, Pages, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
