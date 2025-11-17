@@ -13,9 +13,12 @@ export const cloudinaryAdapter: Adapter = () => ({
   
   // Generate public URL for files
   generateURL: ({ filename }) => {
-    // Return Cloudinary URL
+    // Cloudinary URL format with folder
     const publicId = filename.split('.')[0]
-    return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/insignia-media/${publicId}`
+    const extension = filename.split('.').pop()
+    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/insignia-media/${publicId}.${extension}`
+    console.log('🔗 generateURL called for:', filename, '→', url)
+    return url
   },
 
   // Handle file upload
@@ -46,10 +49,10 @@ export const cloudinaryAdapter: Adapter = () => ({
 
       console.log('✅ Cloudinary adapter success:', result.secure_url)
 
-      // Return updated data
+      // Return updated data with Cloudinary URL
+      // The plugin will use this URL directly when disablePayloadAccessControl is true
       return {
         ...data,
-        url: result.secure_url,
         filename: fileName,
       }
     } catch (error) {
