@@ -23,45 +23,41 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: {
-    staticDir: 'media',
-    mimeTypes: ['image/*', 'video/*'],
-  },
+  upload: true,
   hooks: {
-    afterChange: [
-      async ({ doc, req, operation }) => {
-        // Upload to Cloudinary after file is saved locally
-        if (operation === 'create' && doc.filename) {
+    beforeChange: [
+      async ({ req, data }) => {
+        // Upload to Cloudinary BEFORE saving to disk
+        if (req.file) {
           try {
-            console.log('🔄 Starting Cloudinary upload for:', doc.filename)
+            console.log('🔄 Starting Cloudinary upload for:', req.file.filename)
             
-            // Absolute path to uploaded file
-            const localPath = `${process.cwd()}/media/${doc.filename}`
-            console.log('📁 Local path:', localPath)
-            
-            const result = await cloudinary.uploader.upload(localPath, {
-              folder: 'insignia-media',
-              public_id: doc.filename.split('.')[0],
-              resource_type: 'auto',
+            // Upload from buffer (memory) instead of disk
+            const result = await new Promise((resolve, reject) => {
+              const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                  folder: 'insignia-media',
+                  public_id: req.file.filename.split('.')[0],
+                  resource_type: 'auto',
+                },
+                (error, result) => {
+                  if (error) reject(error)
+                  else resolve(result)
+                }
+              )
+              uploadStream.end(req.file.data)
             })
             
             console.log('✅ Cloudinary upload success:', result.secure_url)
             
-            // Update document with Cloudinary URL
-            await req.payload.update({
-              collection: 'media',
-              id: doc.id,
-              data: {
-                url: result.secure_url,
-              },
-            })
+            // Set Cloudinary URL instead of local path
+            data.url = result.secure_url
             
-            console.log('✅ Updated Media document with Cloudinary URL')
           } catch (error) {
             console.error('❌ Cloudinary upload error:', error)
           }
         }
-        return doc
+        return data
       },
     ],
   },
