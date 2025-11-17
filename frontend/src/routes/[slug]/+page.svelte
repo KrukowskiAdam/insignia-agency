@@ -126,9 +126,9 @@
 												class:size-small={card.size === 'small'}
 												class:size-medium={card.size === 'medium'}
 												class:size-large={card.size === 'large'}
-												on:click={() => toggleCard(cardId)}
-												on:keydown={(e) => e.key === 'Enter' && toggleCard(cardId)}
-												on:mouseleave={() => openCardId = null}
+												onclick={() => toggleCard(cardId)}
+												onkeydown={(e) => e.key === 'Enter' && toggleCard(cardId)}
+												onmouseleave={() => openCardId = null}
 												role="button"
 												tabindex="0"
 											>
