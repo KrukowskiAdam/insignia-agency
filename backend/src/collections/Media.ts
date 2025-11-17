@@ -23,11 +23,14 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
+  upload: {
+    disableLocalStorage: true,
+    mimeTypes: ['image/*', 'video/*'],
+  },
   hooks: {
     beforeChange: [
       async ({ req, data }) => {
-        // Upload to Cloudinary BEFORE saving to disk
+        // Upload to Cloudinary instead of local storage
         if (req.file) {
           try {
             const fileName = req.file.name
@@ -35,7 +38,7 @@ export const Media: CollectionConfig = {
             
             console.log('🔄 Starting Cloudinary upload for:', fileName)
             
-            // Upload from buffer (memory) instead of disk
+            // Upload from buffer (memory) to Cloudinary
             const result: any = await new Promise((resolve, reject) => {
               const uploadStream = cloudinary.uploader.upload_stream(
                 {
@@ -53,11 +56,17 @@ export const Media: CollectionConfig = {
             
             console.log('✅ Cloudinary upload success:', result.secure_url)
             
-            // Set Cloudinary URL instead of local path
+            // Override all file fields with Cloudinary data
             data.url = result.secure_url
+            data.filename = fileName
+            data.mimeType = req.file.mimetype
+            data.filesize = req.file.size
+            data.width = result.width
+            data.height = result.height
             
           } catch (error) {
             console.error('❌ Cloudinary upload error:', error)
+            throw error // Prevent saving if upload fails
           }
         }
         return data
