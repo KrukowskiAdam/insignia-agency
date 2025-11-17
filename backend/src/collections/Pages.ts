@@ -126,13 +126,6 @@ export const Pages: CollectionConfig = {
           slug: 'cards',
           fields: [
             {
-              name: 'title',
-              type: 'text',
-              admin: {
-                description: 'Section title (optional)',
-              },
-            },
-            {
               name: 'cards',
               type: 'array',
               fields: [
