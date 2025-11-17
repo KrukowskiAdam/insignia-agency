@@ -100,85 +100,9 @@ export const load: PageLoad = async ({ fetch }) => {
 			}
 		}
 
-		// Fetch cards
-		const cardsResponse = await fetch(`${API_URL}/api/cards?sort=order&limit=100`);
-		
-		if (!cardsResponse.ok) {
-			console.error('Failed to fetch cards:', cardsResponse.statusText);
-			return { cards: [], homepage };
-		}
-
-		const json: PayloadResponse = await cardsResponse.json();
-		
-		if (!json.docs || json.docs.length === 0) {
-			return { cards: [] };
-		}
-		
-		const cards: Card[] = json.docs.map((item: any) => {
-			const type = item.Enumeration?.replace('Block_', '') as CardType;
-			
-			const baseCard = {
-				id: item.id,
-				type,
-				column: item.column,
-				size: item.size,
-				footerTitle: item.footerTitle || '',
-				footerDescription: item.footerDescription || '',
-				buttonText: item.buttonText || '',
-				buttonColor: item.buttonColor || 'red',
-				buttonLinkType: item.buttonLinkType || 'none',
-				buttonLinkValue: item.buttonLinkValue || '',
-				order: item.order || 0
-			};
-
-			if (type === 'BigText') {
-				return {
-					...baseCard,
-					type: 'BigText' as const,
-					titleLine1: item.titleLine1 || '',
-					titleLine2: item.titleLine2 || '',
-					titleColor: item.titleColor || 'red'
-				};
-			} else if (type === 'DescText') {
-				return {
-					...baseCard,
-					type: 'DescText' as const,
-					title: item.title || '',
-					description: item.description || ''
-				};
-			} else if (type === 'Video') {
-				const videoWebmUrl = item.videoWebm?.url || '';
-				const videoMp4Url = item.videoMp4?.url || '';
-				
-				return {
-					...baseCard,
-					type: 'Video' as const,
-					videoWebm: videoWebmUrl.startsWith('http') ? videoWebmUrl : `${API_URL}${videoWebmUrl}`,
-					videoMp4: videoMp4Url.startsWith('http') ? videoMp4Url : `${API_URL}${videoMp4Url}`,
-					category: item.category || '',
-					title: item.title || '',
-					description: item.description || ''
-				};
-			} else if (type === 'Image') {
-				const imageSrcUrl = item.imageSrc?.url || '';
-				
-				return {
-					...baseCard,
-					type: 'Image' as const,
-					imageSrc: imageSrcUrl.startsWith('http') ? imageSrcUrl : `${API_URL}${imageSrcUrl}`,
-					imageAlt: item.imageAlt || '',
-					category: item.category || '',
-					title: item.title || '',
-					description: item.description || ''
-				};
-			}
-
-			return baseCard as Card;
-		});
-
-		return { cards, homepage };
+		return { homepage };
 	} catch (error) {
-		console.error('Error loading cards:', error);
-		return { cards: [], homepage: null };
+		console.error('Error loading homepage:', error);
+		return { homepage: null };
 	}
 };
