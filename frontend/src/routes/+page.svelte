@@ -26,19 +26,14 @@
 		return '';
 	}
 
-	// Use blocks from homepage if available, otherwise use hardcoded cards
+	// Use blocks from homepage ONLY
 	const homepage = $derived(data.homepage);
 	const blocks = $derived(homepage?.blocks || []);
-	const useBlocks = $derived(blocks.length > 0);
 	
 	// Debug logs for browser console
 	console.log('🏠 Homepage object:', homepage);
 	console.log('🧱 Blocks array:', blocks);
-	console.log('✅ Using blocks?', useBlocks);
-	console.log('📦 Cards from old system:', data.cards.length);
-	
-	// Fallback to old card system if no blocks
-	const projects = $derived(!useBlocks ? data.cards : []);
+	console.log('📦 Total blocks:', blocks.length);
 
 	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
@@ -82,8 +77,7 @@
 		return allCards;
 	}
 
-	const blockCards = $derived(useBlocks ? getCardsFromBlocks() : []);
-	const displayCards = $derived(useBlocks ? blockCards : projects);
+	const displayCards = $derived(getCardsFromBlocks());
 
 	// Grupowanie projektów według kolumn
 	const columns = $derived([
