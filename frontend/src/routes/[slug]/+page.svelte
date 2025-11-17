@@ -7,10 +7,14 @@
 	import VideoCard from '../../components/VideoCard.svelte';
 	import ImageCard from '../../components/ImageCard.svelte';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
 
-	$: page = data.page;
-	$: blocks = page.blocks || [];
+	let { data }: Props = $props();
+
+	const page = $derived(data.page);
+	const blocks = $derived(page.blocks || []);
 
 	const API_URL = 'https://insignia-agency-production.up.railway.app';
 
@@ -22,8 +26,8 @@
 		return '';
 	}
 
-	let openCardId: string | null = null;
-	let hoveredColumn: number | null = null;
+	let openCardId = $state<string | null>(null);
+	let hoveredColumn = $state<number | null>(null);
 	let columnRefs: HTMLDivElement[] = [];
 
 	function toggleCard(id: string) {
@@ -75,12 +79,12 @@
 		return allCards;
 	}
 
-	$: displayCards = getCardsFromBlocks();
-	$: columns = [
+	const displayCards = $derived(getCardsFromBlocks());
+	const columns = $derived([
 		displayCards.filter((p: any) => p.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
 		displayCards.filter((p: any) => p.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
 		displayCards.filter((p: any) => p.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-	];
+	]);
 
 	// Initialize Lenis for cards blocks
 	onMount(() => {
@@ -136,8 +140,8 @@
 				{@html block.text.replace(/\n/g, '<br>')}
 			</div>
 		{:else if block.blockType === 'cards'}
-			<div class="projects-page">
-				<div class="grid">
+			<section class="cards-block-section">
+				<div class="cards-grid">
 					{#each columns as column, colIndex}
 						<div 
 							class="column"
@@ -237,7 +241,7 @@
 						</div>
 					{/each}
 				</div>
-			</div>
+			</section>
 		{/if}
 	{/each}
 </div>
@@ -297,15 +301,8 @@
 		font-size: 1.1rem;
 	}
 
-	/* Projects Page - Cards */
-	.projects-page {
-		min-height: 100vh;
-		padding: 0;
-		font-family: 'Inter Tight', sans-serif;
-	}
-
-	/* Grid 3-kolumnowy */
-	.grid {
+	/* Cards Grid - 3 kolumny */
+	.cards-grid {
 		display: flex;
 		gap: 0.5rem;
 		width: 100%;
@@ -334,12 +331,10 @@
 		padding: 0.5rem 0;
 	}
 
-	/* Card Wrapper */
 	.card-wrapper {
 		flex-shrink: 0;
 	}
 
-	/* Projekt Card */
 	.project-card {
 		width: 100%;
 		flex-shrink: 0;
@@ -351,7 +346,6 @@
 		border-radius: 8px;
 	}
 
-	/* Różne rozmiary kart */
 	.project-card.size-small {
 		aspect-ratio: 1;
 		min-height: 320px;
@@ -371,7 +365,6 @@
 		transform: scale(1);
 	}
 
-	/* Card Slider Container */
 	.card-slider {
 		width: 100%;
 		height: 100%;
@@ -382,7 +375,6 @@
 		backface-visibility: hidden;
 	}
 
-	/* Card Content bez slidera */
 	.card-content.no-slider {
 		width: 100%;
 		height: 100%;
@@ -391,7 +383,6 @@
 		border-radius: 8px;
 	}
 
-	/* Card Footer */
 	.card-footer {
 		padding: 0.75rem 0 1.5rem 0;
 		background: white;
@@ -460,9 +451,8 @@
 		line-height: 1.3;
 	}
 
-	/* Responsive */
 	@media (max-width: 1024px) {
-		.grid {
+		.cards-grid {
 			flex-direction: column;
 		}
 
@@ -476,7 +466,7 @@
 			font-size: 2rem;
 		}
 
-		.grid {
+		.cards-grid {
 			gap: 1rem;
 		}
 	}
