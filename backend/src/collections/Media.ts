@@ -26,7 +26,7 @@ export const Media: CollectionConfig = {
   upload: {
     mimeTypes: ['image/*', 'video/*'],
     disableLocalStorage: true,
-    adminThumbnail: ({ doc }) => doc.url || '',
+    adminThumbnail: ({ doc }) => (doc.url as string) || '',
   },
   hooks: {
     beforeChange: [
