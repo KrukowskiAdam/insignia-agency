@@ -1,25 +1,179 @@
 // Insignia Agency - Payload CMS Custom Styles
+// Paleta Insignia:
+// Primary Blue: #3873A6 (akcent, CTA, aktywne elementy)
+// Light Gray: #F2F2F2 (tła jasne, separatory)
+// Medium Gray: #BFBFBF (tekst secondary, borders)
+// Dark Gray: #8C8C8C (tekst disabled, subtle elements)
+// Near Black: #262626 (tło główne dark mode)
 
 :root {
-  // Kolory główne
-  --theme-bg: #0a0a0a; // Tło - ciemny czarny
-  --theme-elevation-50: #141414; // Karty/panele
-  --theme-elevation-100: #1a1a1a;
-  --theme-elevation-150: #202020;
-  --theme-elevation-200: #262626;
+  // === TŁEM GŁÓWNYM ===
+  --theme-bg: #262626; // Near Black - główne tło aplikacji
   
-  // Akcent (branding Insignia)
-  --theme-success-500: #00ff00; // Zielony akcent (możesz zmienić na kolor Insignia)
-  --theme-text: #ffffff;
-  --theme-elevation-400: #333333;
+  // === ELEVATION (karty, panele, modalne) ===
+  --theme-elevation-0: #1a1a1a; // Jeszcze ciemniejsze dla depth
+  --theme-elevation-50: #2a2a2a; // Lekko jaśniejsze od bg
+  --theme-elevation-100: #333333; // Karty
+  --theme-elevation-150: #3a3a3a; // Hover states
+  --theme-elevation-200: #404040; // Aktywne panele
+  --theme-elevation-300: #4a4a4a;
+  --theme-elevation-400: #555555;
+  --theme-elevation-500: #606060;
+  --theme-elevation-600: #6a6a6a;
+  --theme-elevation-700: #757575;
+  --theme-elevation-800: #808080;
+  --theme-elevation-900: #8C8C8C; // Dark Gray
+  --theme-elevation-1000: #BFBFBF; // Medium Gray
+  
+  // === TEKST ===
+  --theme-text: #F2F2F2; // Light Gray - główny tekst (wysoky kontrast)
+  --theme-text-secondary: #BFBFBF; // Medium Gray - tekst pomocniczy
+  --theme-text-tertiary: #8C8C8C; // Dark Gray - labels, placeholders
+  
+  // === KOLORY AKCJI - Primary Blue (#3873A6) ===
+  --theme-success-500: #3873A6; // Przyciski główne, linki
+  --theme-success-600: #2d5c87; // Hover
+  --theme-success-700: #234768; // Active/Pressed
+  --theme-success-400: #4a8bc4; // Lighter variant
+  --theme-success-300: #6ca3d4; // Very light
+  
+  // === BORDERY ===
+  --theme-elevation-border: rgba(191, 191, 191, 0.15); // Medium Gray z alpha
+  --theme-elevation-border-hover: rgba(191, 191, 191, 0.3);
+  
+  // === INPUT FIELDS ===
+  --theme-input-bg: #2a2a2a;
+  --theme-input-border: rgba(191, 191, 191, 0.2);
+  --theme-input-border-focus: #3873A6;
+  
+  // === SIDEBAR NAVIGATION ===
+  --theme-nav-bg: #1f1f1f; // Ciemniejsze niż main bg
+  --theme-nav-item-hover: rgba(56, 115, 166, 0.1); // Blue tint
+  --theme-nav-item-active: rgba(56, 115, 166, 0.2);
 }
 
-// Własne style dla sidebaru, nagłówka itp
+// === GŁÓWNE KOMPONENTY ===
+
+// Sidebar navigation
 .nav {
-  background: var(--theme-bg) !important;
+  background: var(--theme-nav-bg) !important;
+  border-right: 1px solid var(--theme-elevation-border);
 }
 
+.nav__link {
+  color: var(--theme-text-secondary) !important;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--theme-nav-item-hover) !important;
+    color: var(--theme-text) !important;
+  }
+  
+  &--active {
+    background: var(--theme-nav-item-active) !important;
+    color: var(--theme-success-500) !important;
+    border-left: 3px solid var(--theme-success-500);
+  }
+}
+
+// Header
 .app-header {
   background: var(--theme-elevation-50) !important;
-  border-bottom: 1px solid var(--theme-elevation-200);
+  border-bottom: 1px solid var(--theme-elevation-border);
+}
+
+// Przyciski główne (Save, Create, etc.)
+.btn--style-primary {
+  background: var(--theme-success-500) !important;
+  color: white !important;
+  border: none !important;
+  
+  &:hover:not(:disabled) {
+    background: var(--theme-success-600) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(56, 115, 166, 0.3);
+  }
+  
+  &:active {
+    background: var(--theme-success-700) !important;
+    transform: translateY(0);
+  }
+}
+
+// Input fields
+.input,
+.textarea,
+.select {
+  background: var(--theme-input-bg) !important;
+  border: 1px solid var(--theme-input-border) !important;
+  color: var(--theme-text) !important;
+  
+  &:focus {
+    border-color: var(--theme-input-border-focus) !important;
+    box-shadow: 0 0 0 3px rgba(56, 115, 166, 0.1) !important;
+  }
+  
+  &::placeholder {
+    color: var(--theme-text-tertiary) !important;
+  }
+}
+
+// Cards/Panels
+.card {
+  background: var(--theme-elevation-100) !important;
+  border: 1px solid var(--theme-elevation-border) !important;
+  
+  &:hover {
+    border-color: var(--theme-elevation-border-hover) !important;
+  }
+}
+
+// Tables
+.table {
+  background: var(--theme-elevation-50) !important;
+  
+  th {
+    background: var(--theme-elevation-100) !important;
+    color: var(--theme-text-secondary) !important;
+    border-bottom: 2px solid var(--theme-elevation-border);
+  }
+  
+  tr {
+    border-bottom: 1px solid var(--theme-elevation-border);
+    
+    &:hover {
+      background: var(--theme-elevation-150) !important;
+    }
+  }
+}
+
+// Labels
+.field-label {
+  color: var(--theme-text-secondary) !important;
+  font-weight: 500;
+}
+
+// Linki
+a {
+  color: var(--theme-success-500) !important;
+  
+  &:hover {
+    color: var(--theme-success-400) !important;
+  }
+}
+
+// Status indicators
+.pill--style-success {
+  background: rgba(56, 115, 166, 0.15) !important;
+  color: var(--theme-success-400) !important;
+}
+
+// Media upload preview
+.file-field__preview {
+  background: var(--theme-elevation-100) !important;
+  border: 2px dashed var(--theme-elevation-border) !important;
+  
+  &:hover {
+    border-color: var(--theme-success-500) !important;
+  }
 }
