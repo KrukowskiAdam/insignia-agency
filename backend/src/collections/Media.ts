@@ -30,14 +30,14 @@ export const Media: CollectionConfig = {
         // Upload to Cloudinary BEFORE saving to disk
         if (req.file) {
           try {
-            console.log('🔄 Starting Cloudinary upload for:', req.file.filename)
+            console.log('🔄 Starting Cloudinary upload for:', req.file.name)
             
             // Upload from buffer (memory) instead of disk
-            const result = await new Promise((resolve, reject) => {
+            const result: any = await new Promise((resolve, reject) => {
               const uploadStream = cloudinary.uploader.upload_stream(
                 {
                   folder: 'insignia-media',
-                  public_id: req.file.filename.split('.')[0],
+                  public_id: req.file.name.split('.')[0],
                   resource_type: 'auto',
                 },
                 (error, result) => {
