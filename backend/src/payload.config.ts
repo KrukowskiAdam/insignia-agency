@@ -1,7 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -38,7 +38,7 @@ export default buildConfig({
     },
   },
   plugins: [
-    cloudStorage({
+    cloudStoragePlugin({
       collections: {
         media: {
           adapter: cloudinaryAdapter,
