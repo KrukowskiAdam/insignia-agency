@@ -1,4 +1,6 @@
 // storage-adapter-import-placeholder
+import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
+import { v2 as cloudinary } from 'cloudinary'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -14,6 +16,13 @@ import { Footer } from './collections/Footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
+  api_key: process.env.CLOUDINARY_API_KEY || '',
+  api_secret: process.env.CLOUDINARY_API_SECRET || '',
+})
 
 export default buildConfig({
   admin: {
@@ -62,5 +71,20 @@ export default buildConfig({
     'https://*.vercel.app',
     'https://*.railway.app',
     'https://*.onrender.com',
+  ],
+  plugins: [
+    cloudStorage({
+      collections: {
+        media: {
+          adapter: async () => {
+            const { cloudinaryAdapter } = await import('@payloadcms/plugin-cloud-storage/cloudinary')
+            return cloudinaryAdapter({
+              cloudinary,
+              folder: 'insignia-media',
+            })
+          },
+        },
+      },
+    }),
   ],
 })
