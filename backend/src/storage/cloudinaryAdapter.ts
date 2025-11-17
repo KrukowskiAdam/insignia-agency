@@ -1,4 +1,4 @@
-import type { GeneratedAdapter } from '@payloadcms/plugin-cloud-storage/types'
+import type { Adapter } from '@payloadcms/plugin-cloud-storage/types'
 import { v2 as cloudinary } from 'cloudinary'
 
 // Configure Cloudinary
@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET || '',
 })
 
-export const cloudinaryAdapter: GeneratedAdapter = {
+export const cloudinaryAdapter: Adapter = () => ({
   name: 'cloudinary',
   
   // Generate public URL for files
@@ -75,4 +75,4 @@ export const cloudinaryAdapter: GeneratedAdapter = {
   staticHandler: async () => {
     return new Response('Not Found', { status: 404 })
   },
-}
+})
