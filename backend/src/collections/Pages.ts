@@ -92,7 +92,6 @@ export const Pages: CollectionConfig = {
     {
       name: 'blocks',
       type: 'blocks',
-      required: true,
       blocks: [
         {
           slug: 'hero',
