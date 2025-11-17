@@ -31,6 +31,12 @@
 	const blocks = $derived(homepage?.blocks || []);
 	const useBlocks = $derived(blocks.length > 0);
 	
+	// Debug logs for browser console
+	console.log('🏠 Homepage object:', homepage);
+	console.log('🧱 Blocks array:', blocks);
+	console.log('✅ Using blocks?', useBlocks);
+	console.log('📦 Cards from old system:', data.cards.length);
+	
 	// Fallback to old card system if no blocks
 	const projects = $derived(!useBlocks ? data.cards : []);
 
