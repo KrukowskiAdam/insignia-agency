@@ -3,9 +3,7 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "backend/Dockerfile",
-    "watchPaths": [
-      "backend/**"
-    ]
+    "dockerContext": "backend"
   },
   "deploy": {
     "startCommand": "node server.js",
