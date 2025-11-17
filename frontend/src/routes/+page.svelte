@@ -34,6 +34,14 @@
 	console.log('🏠 Homepage object:', homepage);
 	console.log('🧱 Blocks array:', blocks);
 	console.log('📦 Total blocks:', blocks.length);
+	
+	// Debug każdego bloku
+	blocks.forEach((block: any, index: number) => {
+		console.log(`📋 Block ${index}:`, block.blockType, block);
+		if (block.blockType === 'cards') {
+			console.log(`  └─ Cards w bloku:`, block.cards);
+		}
+	});
 
 	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
@@ -62,7 +70,9 @@
 	function getCardsFromBlocks() {
 		const allCards: Card[] = [];
 		blocks.forEach((block: any) => {
+			console.log('🔍 Checking block:', block.blockType, 'has cards?', !!block.cards);
 			if (block.blockType === 'cards' && block.cards) {
+				console.log('  ✅ Found cards block with', block.cards.length, 'cards');
 				// Convert Payload format to frontend format
 				const convertedCards = block.cards.map((card: any) => ({
 					...card,
@@ -71,9 +81,11 @@
 					videoWebm: getMediaUrl(card.videoWebm),
 					videoMp4: getMediaUrl(card.videoMp4),
 				}));
+				console.log('  📤 Converted cards:', convertedCards);
 				allCards.push(...convertedCards);
 			}
 		});
+		console.log('🎯 Total cards from all blocks:', allCards.length, allCards);
 		return allCards;
 	}
 
