@@ -21,6 +21,7 @@ RUN \
 
 # Rebuild the source code only when needed
 FROM base AS builder
+RUN apk add --no-cache libc6-compat vips-dev build-base python3 g++ make
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -29,6 +30,12 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
+
+# Set environment variable to help sharp find the correct binaries
+ENV SHARP_IGNORE_GLOBAL_LIBVIPS=1
+
+# Reinstall sharp with correct platform binaries
+RUN npm install --cpu=x64 --os=linux --libc=musl sharp@0.34.2
 
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
@@ -39,6 +46,7 @@ RUN \
 
 # Production image, copy all the files and run next
 FROM base AS runner
+RUN apk add --no-cache vips
 WORKDIR /app
 
 ENV NODE_ENV production
