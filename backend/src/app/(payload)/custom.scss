@@ -1,34 +1,34 @@
 // Insignia Agency - Payload CMS Custom Styles
 // Paleta Insignia:
 // Primary Blue: #3873A6 (akcent, CTA, aktywne elementy)
-// Light Gray: #F2F2F2 (tła jasne, separatory)
-// Medium Gray: #BFBFBF (tekst secondary, borders)
-// Dark Gray: #8C8C8C (tekst disabled, subtle elements)
-// Near Black: #262626 (tło główne dark mode)
+// Light Gray: #F2F2F2 (tło główne - wysoky kontrast)
+// Medium Gray: #BFBFBF (borders, separatory)
+// Dark Gray: #8C8C8C (tekst secondary)
+// Near Black: #262626 (tekst główny, sidebar)
 
 :root {
-  // === TŁEM GŁÓWNYM ===
-  --theme-bg: #262626; // Near Black - główne tło aplikacji
+  // === TŁO GŁÓWNE - JASNE ===
+  --theme-bg: #F2F2F2; // Light Gray - główne tło aplikacji (wysoki kontrast)
   
-  // === ELEVATION (karty, panele, modalne) ===
-  --theme-elevation-0: #1a1a1a; // Jeszcze ciemniejsze dla depth
-  --theme-elevation-50: #2a2a2a; // Lekko jaśniejsze od bg
-  --theme-elevation-100: #333333; // Karty
-  --theme-elevation-150: #3a3a3a; // Hover states
-  --theme-elevation-200: #404040; // Aktywne panele
-  --theme-elevation-300: #4a4a4a;
-  --theme-elevation-400: #555555;
-  --theme-elevation-500: #606060;
-  --theme-elevation-600: #6a6a6a;
-  --theme-elevation-700: #757575;
-  --theme-elevation-800: #808080;
-  --theme-elevation-900: #8C8C8C; // Dark Gray
+  // === ELEVATION (karty, panele, modalne) - BIAŁE/JASNE ===
+  --theme-elevation-0: #ffffff; // Białe karty
+  --theme-elevation-50: #fafafa; // Bardzo jasne
+  --theme-elevation-100: #ffffff; // Białe panele
+  --theme-elevation-150: #f8f8f8; // Hover states
+  --theme-elevation-200: #f5f5f5; // Aktywne panele
+  --theme-elevation-300: #f0f0f0;
+  --theme-elevation-400: #ebebeb;
+  --theme-elevation-500: #e6e6e6;
+  --theme-elevation-600: #e0e0e0;
+  --theme-elevation-700: #dadada;
+  --theme-elevation-800: #d5d5d5;
+  --theme-elevation-900: #d0d0d0;
   --theme-elevation-1000: #BFBFBF; // Medium Gray
   
   // === TEKST ===
-  --theme-text: #F2F2F2; // Light Gray - główny tekst (wysoky kontrast)
-  --theme-text-secondary: #BFBFBF; // Medium Gray - tekst pomocniczy
-  --theme-text-tertiary: #8C8C8C; // Dark Gray - labels, placeholders
+  --theme-text: #262626; // Near Black - główny tekst (wysokı kontrast na jasnym)
+  --theme-text-secondary: #8C8C8C; // Dark Gray - tekst pomocniczy
+  --theme-text-tertiary: #BFBFBF; // Medium Gray - labels, placeholders
   
   // === KOLORY AKCJI - Primary Blue (#3873A6) ===
   --theme-success-500: #3873A6; // Przyciski główne, linki
@@ -38,47 +38,48 @@
   --theme-success-300: #6ca3d4; // Very light
   
   // === BORDERY ===
-  --theme-elevation-border: rgba(191, 191, 191, 0.15); // Medium Gray z alpha
-  --theme-elevation-border-hover: rgba(191, 191, 191, 0.3);
+  --theme-elevation-border: #BFBFBF; // Medium Gray - wyraźne bordery
+  --theme-elevation-border-hover: #8C8C8C; // Dark Gray na hover
   
   // === INPUT FIELDS ===
-  --theme-input-bg: #2a2a2a;
-  --theme-input-border: rgba(191, 191, 191, 0.2);
+  --theme-input-bg: #ffffff;
+  --theme-input-border: #BFBFBF;
   --theme-input-border-focus: #3873A6;
   
-  // === SIDEBAR NAVIGATION ===
-  --theme-nav-bg: #1f1f1f; // Ciemniejsze niż main bg
-  --theme-nav-item-hover: rgba(56, 115, 166, 0.1); // Blue tint
-  --theme-nav-item-active: rgba(56, 115, 166, 0.2);
+  // === SIDEBAR NAVIGATION - CIEMNY ===
+  --theme-nav-bg: #262626; // Near Black - ciemny sidebar dla kontrastu
+  --theme-nav-text: #F2F2F2; // Jasny tekst w ciemnym sidebar
+  --theme-nav-item-hover: rgba(56, 115, 166, 0.15); // Blue tint
+  --theme-nav-item-active: rgba(56, 115, 166, 0.25);
 }
 
 // === GŁÓWNE KOMPONENTY ===
 
-// Sidebar navigation
+// Sidebar navigation - CIEMNY dla kontrastu z jasnym contentem
 .nav {
   background: var(--theme-nav-bg) !important;
-  border-right: 1px solid var(--theme-elevation-border);
+  border-right: 1px solid #404040;
 }
 
 .nav__link {
-  color: var(--theme-text-secondary) !important;
+  color: var(--theme-nav-text) !important;
   transition: all 0.2s ease;
   
   &:hover {
     background: var(--theme-nav-item-hover) !important;
-    color: var(--theme-text) !important;
+    color: #ffffff !important;
   }
   
   &--active {
     background: var(--theme-nav-item-active) !important;
-    color: var(--theme-success-500) !important;
+    color: var(--theme-success-400) !important;
     border-left: 3px solid var(--theme-success-500);
   }
 }
 
-// Header
+// Header - jasny
 .app-header {
-  background: var(--theme-elevation-50) !important;
+  background: #ffffff !important;
   border-bottom: 1px solid var(--theme-elevation-border);
 }
 
@@ -91,7 +92,7 @@
   &:hover:not(:disabled) {
     background: var(--theme-success-600) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(56, 115, 166, 0.3);
+    box-shadow: 0 4px 12px rgba(56, 115, 166, 0.25);
   }
   
   &:active {
@@ -100,7 +101,7 @@
   }
 }
 
-// Input fields
+// Input fields - białe z wyraźnymi borderami
 .input,
 .textarea,
 .select {
@@ -118,24 +119,27 @@
   }
 }
 
-// Cards/Panels
+// Cards/Panels - białe na jasnym tle
 .card {
   background: var(--theme-elevation-100) !important;
   border: 1px solid var(--theme-elevation-border) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   
   &:hover {
     border-color: var(--theme-elevation-border-hover) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 }
 
-// Tables
+// Tables - białe z subtelnymi borderami
 .table {
-  background: var(--theme-elevation-50) !important;
+  background: #ffffff !important;
   
   th {
-    background: var(--theme-elevation-100) !important;
-    color: var(--theme-text-secondary) !important;
+    background: var(--theme-elevation-200) !important;
+    color: var(--theme-text) !important;
     border-bottom: 2px solid var(--theme-elevation-border);
+    font-weight: 600;
   }
   
   tr {
@@ -147,33 +151,36 @@
   }
 }
 
-// Labels
+// Labels - ciemny tekst
 .field-label {
-  color: var(--theme-text-secondary) !important;
+  color: var(--theme-text) !important;
   font-weight: 500;
 }
 
-// Linki
+// Linki - niebieski akcent
 a {
   color: var(--theme-success-500) !important;
   
   &:hover {
-    color: var(--theme-success-400) !important;
+    color: var(--theme-success-600) !important;
+    text-decoration: underline;
   }
 }
 
 // Status indicators
 .pill--style-success {
-  background: rgba(56, 115, 166, 0.15) !important;
-  color: var(--theme-success-400) !important;
+  background: rgba(56, 115, 166, 0.1) !important;
+  color: var(--theme-success-600) !important;
+  border: 1px solid var(--theme-success-500);
 }
 
-// Media upload preview
+// Media upload preview - białe z borderm
 .file-field__preview {
-  background: var(--theme-elevation-100) !important;
+  background: #ffffff !important;
   border: 2px dashed var(--theme-elevation-border) !important;
   
   &:hover {
     border-color: var(--theme-success-500) !important;
+    background: rgba(56, 115, 166, 0.02) !important;
   }
 }
