@@ -36,13 +36,51 @@
 		return 0.97;
 	};
 
-	function getCardsColumns(cardsData: any[]) {
-		return [
-			cardsData.filter((c: any) => c.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-			cardsData.filter((c: any) => c.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-			cardsData.filter((c: any) => c.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-		];
+	// Helper functions for buttonLink validation
+	function isExternalLink(linkType: string, linkValue: string): boolean {
+		return linkType === 'external' && Boolean(linkValue && linkValue.trim() !== '');
 	}
+
+	function getValidLink(linkType: string, linkValue: string): string {
+		if (linkType === 'none' || !linkValue || !linkValue.trim()) return '#';
+		
+		const trimmedValue = linkValue.trim();
+		
+		if (linkType === 'external') {
+			return trimmedValue;
+		} else if (linkType === 'internal') {
+			return trimmedValue;
+		}
+		
+		return '#';
+	};
+
+	// Get cards from blocks and group by columns
+	function getCardsFromBlocks() {
+		const allCards: any[] = [];
+		blocks.forEach((block: any) => {
+			if (block.blockType === 'cards' && block.cards) {
+				// Convert Payload format to frontend format
+				const convertedCards = block.cards.map((card: any) => ({
+					...card,
+					id: card.id,
+					type: card.Enumeration?.replace('Block_', '') || card.type,
+					imageSrc: getMediaUrl(card.imageSrc),
+					videoWebm: getMediaUrl(card.videoWebm),
+					videoMp4: getMediaUrl(card.videoMp4),
+				}));
+				allCards.push(...convertedCards);
+			}
+		});
+		return allCards;
+	}
+
+	$: displayCards = getCardsFromBlocks();
+	$: columns = [
+		displayCards.filter((p: any) => p.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
+		displayCards.filter((p: any) => p.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
+		displayCards.filter((p: any) => p.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+	];
 
 	// Initialize Lenis for cards blocks
 	onMount(() => {
@@ -98,13 +136,9 @@
 				{@html block.text.replace(/\n/g, '<br>')}
 			</div>
 		{:else if block.blockType === 'cards'}
-			<section class="cards-block">
-				{#if block.title}
-					<h2 class="block-title">{block.title}</h2>
-				{/if}
-				
+			<section class="cards-block-section">
 				<div class="cards-grid">
-					{#each getCardsColumns(block.cards || []) as column, colIndex}
+					{#each columns as column, colIndex}
 						<div 
 							class="column"
 							style="flex-grow: {getColumnFlex(colIndex)};"
@@ -115,41 +149,38 @@
 						>
 							<div class="column-content">
 								{#each column as card}
-									{@const cardType = card.Enumeration?.replace('Block_', '')}
-									{@const cardId = card.id}
-									
 									<div class="card-wrapper">
-										{#if cardType === 'Video' || cardType === 'Image'}
+										{#if card.type === 'Video' || card.type === 'Image'}
 											<div 
 												class="project-card" 
-												class:open={openCardId === cardId}
+												class:open={openCardId === card.id}
 												class:size-small={card.size === 'small'}
 												class:size-medium={card.size === 'medium'}
 												class:size-large={card.size === 'large'}
-												onclick={() => toggleCard(cardId)}
-												onkeydown={(e) => e.key === 'Enter' && toggleCard(cardId)}
+												onclick={() => toggleCard(card.id)}
+												onkeydown={(e) => e.key === 'Enter' && toggleCard(card.id)}
 												onmouseleave={() => openCardId = null}
 												role="button"
 												tabindex="0"
 											>
-												<div class="card-slider" class:open={openCardId === cardId}>
-													{#if cardType === 'Video'}
+												<div class="card-slider" class:open={openCardId === card.id}>
+													{#if card.type === 'Video'}
 														<VideoCard 
-															videoWebm={getMediaUrl(card.videoWebm)}
-															videoMp4={getMediaUrl(card.videoMp4)}
+															videoWebm={card.videoWebm}
+															videoMp4={card.videoMp4}
 															category={card.category || ''}
 															title={card.title || ''}
 															description={card.description || ''}
-															isOpen={openCardId === cardId}
+															isOpen={openCardId === card.id}
 														/>
 													{:else}
 														<ImageCard 
-															imageSrc={getMediaUrl(card.imageSrc)}
+															imageSrc={card.imageSrc}
 															imageAlt={card.imageAlt || ''}
 															category={card.category || ''}
 															title={card.title || ''}
 															description={card.description || ''}
-															isOpen={openCardId === cardId}
+															isOpen={openCardId === card.id}
 														/>
 													{/if}
 												</div>
@@ -162,13 +193,13 @@
 												class:size-large={card.size === 'large'}
 											>
 												<div class="card-content no-slider">
-													{#if cardType === 'BigText'}
+													{#if card.type === 'BigText'}
 														<BigTextCard 
 															titleLine1={card.titleLine1 || ''}
 															titleLine2={card.titleLine2 || ''}
 															titleColor={card.titleColor || 'red'}
 														/>
-													{:else if cardType === 'DescText'}
+													{:else if card.type === 'DescText'}
 														<DescTextCard 
 															title={card.title || ''}
 															description={card.description || ''}
@@ -186,13 +217,13 @@
 												</div>
 												{#if card.buttonText && card.buttonText.trim()}
 													<a 
-														href={card.buttonLinkValue || '#'} 
+														href={getValidLink(card.buttonLinkType, card.buttonLinkValue)} 
 														class="footer-button" 
 														class:button-red={card.buttonColor === 'red'}
 														class:button-blue={card.buttonColor === 'blue'}
 														class:button-green={card.buttonColor === 'green'}
-														target={card.buttonLinkType === 'external' ? '_blank' : '_self'}
-														rel={card.buttonLinkType === 'external' ? 'noopener noreferrer' : ''}
+														target={isExternalLink(card.buttonLinkType, card.buttonLinkValue) ? '_blank' : '_self'}
+														rel={isExternalLink(card.buttonLinkType, card.buttonLinkValue) ? 'noopener noreferrer' : ''}
 													>
 														{card.buttonText}
 													</a>
