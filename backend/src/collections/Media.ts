@@ -57,7 +57,11 @@ export const Media: CollectionConfig = {
             
             console.log('✅ Cloudinary upload success:', result.secure_url)
             
-            // Override all file fields with Cloudinary data
+            // Store Cloudinary URL in req for afterChange hook
+            // @ts-ignore
+            req.cloudinaryURL = result.secure_url
+            
+            // Set fields for initial save
             data.url = result.secure_url
             data.filename = fileName
             data.mimeType = req.file.mimetype
@@ -71,6 +75,28 @@ export const Media: CollectionConfig = {
           }
         }
         return data
+      },
+    ],
+    afterChange: [
+      async ({ doc, req, operation }) => {
+        // Fix URL after Payload overwrites it
+        // @ts-ignore
+        if (req.cloudinaryURL && operation === 'create') {
+          // @ts-ignore
+          const cloudinaryURL = req.cloudinaryURL
+          
+          // Update document with correct Cloudinary URL
+          await req.payload.update({
+            collection: 'media',
+            id: doc.id,
+            data: {
+              url: cloudinaryURL,
+            },
+          })
+          
+          console.log('🔧 Fixed URL to Cloudinary:', cloudinaryURL)
+        }
+        return doc
       },
     ],
   },
