@@ -36,6 +36,14 @@
 		return 0.97;
 	};
 
+	function getCardsColumns(cardsData: any[]) {
+		return [
+			cardsData.filter((c: any) => c.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
+			cardsData.filter((c: any) => c.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
+			cardsData.filter((c: any) => c.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+		];
+	}
+
 	// Initialize Lenis for cards blocks
 	onMount(() => {
 		const lenisInstances = columnRefs.map(columnEl => {
@@ -95,15 +103,8 @@
 					<h2 class="block-title">{block.title}</h2>
 				{/if}
 				
-				{@const cardsData = block.cards || []}
-				{@const columns = [
-					cardsData.filter((c: any) => c.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-					cardsData.filter((c: any) => c.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-					cardsData.filter((c: any) => c.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-				]}
-				
 				<div class="cards-grid">
-					{#each columns as column, colIndex}
+					{#each getCardsColumns(block.cards || []) as column, colIndex}
 						<div 
 							class="column"
 							style="flex-grow: {getColumnFlex(colIndex)};"
