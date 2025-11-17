@@ -56,18 +56,17 @@ export const Media: CollectionConfig = {
             })
             
             console.log('✅ Cloudinary upload success:', result.secure_url)
+            console.log('📊 Result data:', { width: result.width, height: result.height })
             
-            // Store Cloudinary URL in req for afterChange hook
-            // @ts-ignore
-            req.cloudinaryURL = result.secure_url
-            
-            // Set fields for initial save
+            // Override URL with Cloudinary - this should work with disableLocalStorage
             data.url = result.secure_url
             data.filename = fileName
             data.mimeType = req.file.mimetype
             data.filesize = req.file.size
-            data.width = result.width
-            data.height = result.height
+            
+            // Only set dimensions if they exist
+            if (result.width) data.width = result.width
+            if (result.height) data.height = result.height
             
           } catch (error) {
             console.error('❌ Cloudinary upload error:', error)
@@ -75,28 +74,6 @@ export const Media: CollectionConfig = {
           }
         }
         return data
-      },
-    ],
-    afterChange: [
-      async ({ doc, req, operation }) => {
-        // Fix URL after Payload overwrites it
-        // @ts-ignore
-        if (req.cloudinaryURL && operation === 'create') {
-          // @ts-ignore
-          const cloudinaryURL = req.cloudinaryURL
-          
-          // Update document with correct Cloudinary URL
-          await req.payload.update({
-            collection: 'media',
-            id: doc.id,
-            data: {
-              url: cloudinaryURL,
-            },
-          })
-          
-          console.log('🔧 Fixed URL to Cloudinary:', cloudinaryURL)
-        }
-        return doc
       },
     ],
   },
