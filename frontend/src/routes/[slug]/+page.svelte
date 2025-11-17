@@ -136,8 +136,8 @@
 				{@html block.text.replace(/\n/g, '<br>')}
 			</div>
 		{:else if block.blockType === 'cards'}
-			<section class="cards-block-section">
-				<div class="cards-grid">
+			<div class="projects-page">
+				<div class="grid">
 					{#each columns as column, colIndex}
 						<div 
 							class="column"
@@ -237,7 +237,7 @@
 						</div>
 					{/each}
 				</div>
-			</section>
+			</div>
 		{/if}
 	{/each}
 </div>
@@ -297,20 +297,15 @@
 		font-size: 1.1rem;
 	}
 
-	/* Cards Block - 3 kolumny */
-	.cards-block {
+	/* Projects Page - Cards */
+	.projects-page {
 		min-height: 100vh;
-		padding: 2rem 0;
+		padding: 0;
+		font-family: 'Inter Tight', sans-serif;
 	}
 
-	.block-title {
-		text-align: center;
-		font-size: 2.5rem;
-		margin-bottom: 2rem;
-		font-weight: 600;
-	}
-
-	.cards-grid {
+	/* Grid 3-kolumnowy */
+	.grid {
 		display: flex;
 		gap: 0.5rem;
 		width: 100%;
@@ -339,10 +334,12 @@
 		padding: 0.5rem 0;
 	}
 
+	/* Card Wrapper */
 	.card-wrapper {
 		flex-shrink: 0;
 	}
 
+	/* Projekt Card */
 	.project-card {
 		width: 100%;
 		flex-shrink: 0;
@@ -354,6 +351,7 @@
 		border-radius: 8px;
 	}
 
+	/* Różne rozmiary kart */
 	.project-card.size-small {
 		aspect-ratio: 1;
 		min-height: 320px;
@@ -373,6 +371,7 @@
 		transform: scale(1);
 	}
 
+	/* Card Slider Container */
 	.card-slider {
 		width: 100%;
 		height: 100%;
@@ -383,6 +382,7 @@
 		backface-visibility: hidden;
 	}
 
+	/* Card Content bez slidera */
 	.card-content.no-slider {
 		width: 100%;
 		height: 100%;
@@ -391,6 +391,7 @@
 		border-radius: 8px;
 	}
 
+	/* Card Footer */
 	.card-footer {
 		padding: 0.75rem 0 1.5rem 0;
 		background: white;
@@ -459,8 +460,9 @@
 		line-height: 1.3;
 	}
 
+	/* Responsive */
 	@media (max-width: 1024px) {
-		.cards-grid {
+		.grid {
 			flex-direction: column;
 		}
 
@@ -474,7 +476,7 @@
 			font-size: 2rem;
 		}
 
-		.cards-grid {
+		.grid {
 			gap: 1rem;
 		}
 	}
