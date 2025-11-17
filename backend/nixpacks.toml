@@ -2,10 +2,10 @@
 nixPkgs = ["nodejs_22", "vips"]
 
 [phases.install]
-cmds = ["npm ci --include=optional"]
+cmds = ["npm ci"]
 
 [phases.build]
 cmds = ["npm run build"]
 
 [start]
-cmd = "npm start"
+cmd = "NODE_OPTIONS='--no-deprecation' next start"
