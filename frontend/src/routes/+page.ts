@@ -92,6 +92,10 @@ export const load: PageLoad = async ({ fetch }) => {
 			const pageData: PayloadResponse = await pageResponse.json();
 			if (pageData.docs && pageData.docs.length > 0) {
 				homepage = pageData.docs[0];
+				console.log('📄 Homepage data:', homepage);
+				console.log('🧱 Homepage blocks:', homepage.blocks);
+			} else {
+				console.log('⚠️ No homepage found with isHomepage=true');
 			}
 		}
 
