@@ -1,27 +1,27 @@
-// Payload Light Theme - bazowy dla customizacji Insignia
+// Payload Dark Theme - bazowy dla customizacji Insignia
 // Możesz edytować te zmienne według potrzeb
 
 :root {
   // === BASE COLORS ===
-  --theme-bg: #fafafa;
-  --theme-input-bg: #ffffff;
-  --theme-baseline-border-color: #dedede;
+  --theme-bg: #1b1b1b;
+  --theme-input-bg: #252525;
+  --theme-baseline-border-color: #333333;
   
   // === TEXT ===
-  --theme-text: #333333;
-  --theme-elevation-1000: #9a9a9a;
-  --theme-elevation-900: #a8a8a8;
-  --theme-elevation-800: #b7b7b7;
-  --theme-elevation-700: #c5c5c5;
-  --theme-elevation-600: #d4d4d4;
-  --theme-elevation-500: #e2e2e2;
-  --theme-elevation-400: #f1f1f1;
-  --theme-elevation-300: #f4f4f4;
-  --theme-elevation-200: #f7f7f7;
-  --theme-elevation-150: #f9f9f9;
-  --theme-elevation-100: #fafafa;
-  --theme-elevation-50: #fcfcfc;
-  --theme-elevation-0: #ffffff;
+  --theme-text: #ffffff;
+  --theme-elevation-0: #000000;
+  --theme-elevation-50: #0d0d0d;
+  --theme-elevation-100: #1a1a1a;
+  --theme-elevation-150: #1e1e1e;
+  --theme-elevation-200: #222222;
+  --theme-elevation-300: #262626;
+  --theme-elevation-400: #2a2a2a;
+  --theme-elevation-500: #2e2e2e;
+  --theme-elevation-600: #333333;
+  --theme-elevation-700: #383838;
+  --theme-elevation-800: #3d3d3d;
+  --theme-elevation-900: #424242;
+  --theme-elevation-1000: #636363;
   
   // === SUCCESS (green/blue accents) ===
   --theme-success-50: #e6f4ea;
@@ -92,9 +92,9 @@
 // 
 // :root {
 //   // Insignia Brand Colors
-//   --theme-success-500: #3873A6;  // Primary Blue
-//   --theme-bg: #F2F2F2;            // Light Gray background
-//   --theme-text: #262626;          // Near Black text
-//   --theme-elevation-1000: #8C8C8C; // Dark Gray
-//   --theme-elevation-600: #BFBFBF;  // Medium Gray
+//   --theme-success-500: #3873A6;   // Primary Blue - przyciski, linki
+//   --theme-bg: #262626;             // Near Black - tło główne
+//   --theme-text: #F2F2F2;           // Light Gray - tekst
+//   --theme-elevation-1000: #8C8C8C; // Dark Gray - tekst secondary
+//   --theme-elevation-600: #BFBFBF;  // Medium Gray - borders
 // }
