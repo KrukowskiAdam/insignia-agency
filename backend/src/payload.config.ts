@@ -1,6 +1,7 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { cloudStorage } from '@payloadcms/plugin-cloud-storage'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -11,6 +12,7 @@ import { Media } from './collections/Media'
 import { Menu } from './collections/Menu'
 import { Pages } from './collections/Pages'
 import { Footer } from './collections/Footer'
+import { cloudinaryAdapter } from './storage/cloudinaryAdapter'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,6 +37,16 @@ export default buildConfig({
       titleSuffix: '- Insignia',
     },
   },
+  plugins: [
+    cloudStorage({
+      collections: {
+        media: {
+          adapter: cloudinaryAdapter,
+          disablePayloadAccessControl: true,
+        },
+      },
+    }),
+  ],
   collections: [Users, Media, Menu, Pages, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
