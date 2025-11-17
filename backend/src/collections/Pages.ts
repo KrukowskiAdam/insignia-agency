@@ -134,14 +134,165 @@ export const Pages: CollectionConfig = {
               },
             },
             {
-              name: 'selectedCards',
-              type: 'relationship',
-              relationTo: 'cards',
-              hasMany: true,
+              name: 'cards',
+              type: 'array',
               required: true,
-              admin: {
-                description: 'Select cards to display in this section',
-              },
+              fields: [
+                {
+                  name: 'Enumeration',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Big Text', value: 'Block_BigText' },
+                    { label: 'Description Text', value: 'Block_DescText' },
+                    { label: 'Video', value: 'Block_Video' },
+                    { label: 'Image', value: 'Block_Image' },
+                  ],
+                },
+                {
+                  name: 'column',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Left', value: 'left' },
+                    { label: 'Middle', value: 'middle' },
+                    { label: 'Right', value: 'right' },
+                  ],
+                },
+                {
+                  name: 'size',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Small', value: 'small' },
+                    { label: 'Medium', value: 'medium' },
+                    { label: 'Large', value: 'large' },
+                  ],
+                },
+                {
+                  name: 'order',
+                  type: 'number',
+                  defaultValue: 0,
+                },
+                // BigText fields
+                {
+                  name: 'titleLine1',
+                  type: 'text',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+                  },
+                },
+                {
+                  name: 'titleLine2',
+                  type: 'text',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+                  },
+                },
+                {
+                  name: 'titleColor',
+                  type: 'select',
+                  options: [
+                    { label: 'Red', value: 'red' },
+                    { label: 'Blue', value: 'blue' },
+                    { label: 'Green', value: 'green' },
+                  ],
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+                  },
+                },
+                // DescText, Video, Image fields
+                {
+                  name: 'title',
+                  type: 'text',
+                  admin: {
+                    condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+                  },
+                },
+                {
+                  name: 'description',
+                  type: 'textarea',
+                  admin: {
+                    condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+                  },
+                },
+                {
+                  name: 'category',
+                  type: 'text',
+                  admin: {
+                    condition: (data, siblingData) => ['Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+                  },
+                },
+                // Image fields
+                {
+                  name: 'imageSrc',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
+                  },
+                },
+                {
+                  name: 'imageAlt',
+                  type: 'text',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
+                  },
+                },
+                // Video fields
+                {
+                  name: 'videoWebm',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
+                  },
+                },
+                {
+                  name: 'videoMp4',
+                  type: 'upload',
+                  relationTo: 'media',
+                  admin: {
+                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
+                  },
+                },
+                // Footer fields
+                {
+                  name: 'footerTitle',
+                  type: 'text',
+                },
+                {
+                  name: 'footerDescription',
+                  type: 'text',
+                },
+                {
+                  name: 'buttonText',
+                  type: 'text',
+                },
+                {
+                  name: 'buttonColor',
+                  type: 'select',
+                  options: [
+                    { label: 'Red', value: 'red' },
+                    { label: 'Blue', value: 'blue' },
+                    { label: 'Green', value: 'green' },
+                  ],
+                },
+                {
+                  name: 'buttonLinkType',
+                  type: 'select',
+                  options: [
+                    { label: 'None', value: 'none' },
+                    { label: 'External Link', value: 'external' },
+                    { label: 'Internal Link', value: 'internal' },
+                  ],
+                  defaultValue: 'none',
+                },
+                {
+                  name: 'buttonLinkValue',
+                  type: 'text',
+                },
+              ],
             },
           ],
         },
