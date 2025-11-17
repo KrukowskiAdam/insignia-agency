@@ -136,7 +136,6 @@ export const Pages: CollectionConfig = {
             {
               name: 'cards',
               type: 'array',
-              required: true,
               fields: [
                 {
                   name: 'Enumeration',
