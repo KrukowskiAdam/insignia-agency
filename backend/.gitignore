@@ -53,7 +53,6 @@ payload.db
 /media
 /public/media
 
-# Docker
-.dockerignore
+# Docker (keep .dockerignore in repo for Railway)
 docker-compose.yml
 
