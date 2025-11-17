@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     cards: Card;
+    menu: Menu;
+    pages: Page;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,13 +82,15 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     cards: CardsSelect<false> | CardsSelect<true>;
+    menu: MenuSelect<false> | MenuSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   globals: {};
   globalsSelect: {};
@@ -122,7 +126,15 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
+  /**
+   * Admin: full access, Editor: can create/edit, Viewer: read-only
+   */
+  role: 'admin' | 'editor' | 'viewer';
+  /**
+   * Full name of the user
+   */
+  name?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -146,7 +158,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -165,7 +177,7 @@ export interface Media {
  * via the `definition` "cards".
  */
 export interface Card {
-  id: number;
+  id: string;
   /**
    * Select card type - fields will change based on your selection
    */
@@ -188,16 +200,16 @@ export interface Card {
   title?: string | null;
   description?: string | null;
   category?: string | null;
-  imageSrc?: (number | null) | Media;
+  imageSrc?: (string | null) | Media;
   imageAlt?: string | null;
   /**
    * WebM video file
    */
-  videoWebm?: (number | null) | Media;
+  videoWebm?: (string | null) | Media;
   /**
    * MP4 video file (fallback)
    */
-  videoMp4?: (number | null) | Media;
+  videoMp4?: (string | null) | Media;
   /**
    * Button text (leave empty for no button)
    */
@@ -215,10 +227,100 @@ export interface Card {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu".
+ */
+export interface Menu {
+  id: string;
+  /**
+   * Menu item text (e.g., "Home", "About", "Contact")
+   */
+  label: string;
+  /**
+   * URL or path (e.g., "/", "/about", "https://example.com")
+   */
+  url: string;
+  /**
+   * Order of appearance in menu (lower number = appears first)
+   */
+  order: number;
+  /**
+   * Open link in new tab
+   */
+  openInNewTab?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  /**
+   * Page title (e.g., "O nas", "Kontakt")
+   */
+  title: string;
+  /**
+   * URL slug - auto-generated from title if left empty (Polish chars converted)
+   */
+  slug: string;
+  /**
+   * Mark this page as the homepage (displayed at "/")
+   */
+  isHomepage?: boolean | null;
+  status: 'draft' | 'published';
+  blocks: (
+    | {
+        heading: string;
+        subheading?: string | null;
+        backgroundImage?: (string | null) | Media;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'hero';
+      }
+    | {
+        text: string;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'content';
+      }
+    | {
+        /**
+         * Section title (optional)
+         */
+        title?: string | null;
+        /**
+         * Select cards to display in this section
+         */
+        selectedCards: (string | Card)[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'cards';
+      }
+  )[];
+  seo?: {
+    /**
+     * SEO title (optional, defaults to page title)
+     */
+    metaTitle?: string | null;
+    /**
+     * SEO meta description
+     */
+    metaDescription?: string | null;
+    /**
+     * SEO share image (optional)
+     */
+    metaImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
+  id: string;
   key: string;
   data:
     | {
@@ -235,24 +337,32 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'cards';
-        value: number | Card;
+        value: string | Card;
+      } | null)
+    | ({
+        relationTo: 'menu';
+        value: string | Menu;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: string | Page;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -262,10 +372,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -285,7 +395,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -296,6 +406,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -356,6 +468,65 @@ export interface CardsSelect<T extends boolean = true> {
   buttonLinkValue?: T;
   footerTitle?: T;
   footerDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menu_select".
+ */
+export interface MenuSelect<T extends boolean = true> {
+  label?: T;
+  url?: T;
+  order?: T;
+  openInNewTab?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  isHomepage?: T;
+  status?: T;
+  blocks?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              heading?: T;
+              subheading?: T;
+              backgroundImage?: T;
+              id?: T;
+              blockName?: T;
+            };
+        content?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        cards?:
+          | T
+          | {
+              title?: T;
+              selectedCards?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
