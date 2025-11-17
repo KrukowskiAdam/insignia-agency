@@ -1,1 +1,100 @@
+// Payload Light Theme - bazowy dla customizacji Insignia
+// Możesz edytować te zmienne według potrzeb
 
+:root {
+  // === BASE COLORS ===
+  --theme-bg: #fafafa;
+  --theme-input-bg: #ffffff;
+  --theme-baseline-border-color: #dedede;
+  
+  // === TEXT ===
+  --theme-text: #333333;
+  --theme-elevation-1000: #9a9a9a;
+  --theme-elevation-900: #a8a8a8;
+  --theme-elevation-800: #b7b7b7;
+  --theme-elevation-700: #c5c5c5;
+  --theme-elevation-600: #d4d4d4;
+  --theme-elevation-500: #e2e2e2;
+  --theme-elevation-400: #f1f1f1;
+  --theme-elevation-300: #f4f4f4;
+  --theme-elevation-200: #f7f7f7;
+  --theme-elevation-150: #f9f9f9;
+  --theme-elevation-100: #fafafa;
+  --theme-elevation-50: #fcfcfc;
+  --theme-elevation-0: #ffffff;
+  
+  // === SUCCESS (green/blue accents) ===
+  --theme-success-50: #e6f4ea;
+  --theme-success-100: #b3dfc5;
+  --theme-success-150: #80ca9f;
+  --theme-success-200: #4db57a;
+  --theme-success-250: #34a968;
+  --theme-success-300: #1a9d56;
+  --theme-success-350: #188f4d;
+  --theme-success-400: #158144;
+  --theme-success-450: #13733c;
+  --theme-success-500: #106533;
+  --theme-success-550: #0e5a2d;
+  --theme-success-600: #0b4f27;
+  --theme-success-650: #094420;
+  --theme-success-700: #06391a;
+  --theme-success-750: #042e13;
+  --theme-success-800: #02230d;
+  --theme-success-850: #011806;
+  --theme-success-900: #000d00;
+  --theme-success-950: #000600;
+  
+  // === WARNING ===
+  --theme-warning-50: #fff8e1;
+  --theme-warning-100: #ffecb3;
+  --theme-warning-150: #ffe082;
+  --theme-warning-200: #ffd54f;
+  --theme-warning-250: #ffca28;
+  --theme-warning-300: #ffc107;
+  --theme-warning-350: #ffb300;
+  --theme-warning-400: #ffa000;
+  --theme-warning-450: #ff8f00;
+  --theme-warning-500: #ff6f00;
+  --theme-warning-550: #f56c00;
+  --theme-warning-600: #eb6900;
+  --theme-warning-650: #e16600;
+  --theme-warning-700: #d76300;
+  --theme-warning-750: #cd6000;
+  --theme-warning-800: #c35d00;
+  --theme-warning-850: #b95a00;
+  --theme-warning-900: #af5700;
+  --theme-warning-950: #a55400;
+  
+  // === ERROR ===
+  --theme-error-50: #fce4ec;
+  --theme-error-100: #f8bbd0;
+  --theme-error-150: #f48fb1;
+  --theme-error-200: #f06292;
+  --theme-error-250: #ec407a;
+  --theme-error-300: #e91e63;
+  --theme-error-350: #d81b60;
+  --theme-error-400: #c2185b;
+  --theme-error-450: #ad1457;
+  --theme-error-500: #880e4f;
+  --theme-error-550: #7e0d47;
+  --theme-error-600: #740c3f;
+  --theme-error-650: #6a0b37;
+  --theme-error-700: #600a2f;
+  --theme-error-750: #560927;
+  --theme-error-800: #4c081f;
+  --theme-error-850: #420717;
+  --theme-error-900: #38060f;
+  --theme-error-950: #2e0507;
+}
+
+// === INSIGNIA CUSTOMIZATION ===
+// Odkomentuj i edytuj poniższe zmienne aby dostosować do brandingu Insignia
+// 
+// :root {
+//   // Insignia Brand Colors
+//   --theme-success-500: #3873A6;  // Primary Blue
+//   --theme-bg: #F2F2F2;            // Light Gray background
+//   --theme-text: #262626;          // Near Black text
+//   --theme-elevation-1000: #8C8C8C; // Dark Gray
+//   --theme-elevation-600: #BFBFBF;  // Medium Gray
+// }
