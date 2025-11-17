@@ -9,7 +9,6 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { Cards } from './collections/Cards'
 import { Menu } from './collections/Menu'
 import { Pages } from './collections/Pages'
 import { Footer } from './collections/Footer'
@@ -37,7 +36,7 @@ export default buildConfig({
       titleSuffix: '- Insignia',
     },
   },
-  collections: [Users, Media, Cards, Menu, Pages, Footer],
+  collections: [Users, Media, Menu, Pages, Footer],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
