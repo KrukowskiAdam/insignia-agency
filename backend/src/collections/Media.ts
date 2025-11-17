@@ -33,12 +33,19 @@ export const Media: CollectionConfig = {
         // Upload to Cloudinary after file is saved locally
         if (operation === 'create' && doc.filename) {
           try {
-            const localPath = `media/${doc.filename}`
+            console.log('🔄 Starting Cloudinary upload for:', doc.filename)
+            
+            // Absolute path to uploaded file
+            const localPath = `${process.cwd()}/media/${doc.filename}`
+            console.log('📁 Local path:', localPath)
+            
             const result = await cloudinary.uploader.upload(localPath, {
               folder: 'insignia-media',
               public_id: doc.filename.split('.')[0],
               resource_type: 'auto',
             })
+            
+            console.log('✅ Cloudinary upload success:', result.secure_url)
             
             // Update document with Cloudinary URL
             await req.payload.update({
@@ -48,8 +55,10 @@ export const Media: CollectionConfig = {
                 url: result.secure_url,
               },
             })
+            
+            console.log('✅ Updated Media document with Cloudinary URL')
           } catch (error) {
-            console.error('Cloudinary upload error:', error)
+            console.error('❌ Cloudinary upload error:', error)
           }
         }
         return doc
