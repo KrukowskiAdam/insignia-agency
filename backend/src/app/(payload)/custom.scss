@@ -1,0 +1,25 @@
+// Insignia Agency - Payload CMS Custom Styles
+
+:root {
+  // Kolory główne
+  --theme-bg: #0a0a0a; // Tło - ciemny czarny
+  --theme-elevation-50: #141414; // Karty/panele
+  --theme-elevation-100: #1a1a1a;
+  --theme-elevation-150: #202020;
+  --theme-elevation-200: #262626;
+  
+  // Akcent (branding Insignia)
+  --theme-success-500: #00ff00; // Zielony akcent (możesz zmienić na kolor Insignia)
+  --theme-text: #ffffff;
+  --theme-elevation-400: #333333;
+}
+
+// Własne style dla sidebaru, nagłówka itp
+.nav {
+  background: var(--theme-bg) !important;
+}
+
+.app-header {
+  background: var(--theme-elevation-50) !important;
+  border-bottom: 1px solid var(--theme-elevation-200);
+}
