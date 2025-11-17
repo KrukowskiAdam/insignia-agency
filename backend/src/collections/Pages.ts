@@ -126,6 +126,13 @@ export const Pages: CollectionConfig = {
           slug: 'cards',
           fields: [
             {
+              name: 'title',
+              type: 'text',
+              admin: {
+                description: 'Section title (optional)',
+              },
+            },
+            {
               name: 'cards',
               type: 'array',
               fields: [
@@ -142,17 +149,6 @@ export const Pages: CollectionConfig = {
                   ],
                 },
                 {
-                  name: 'column',
-                  type: 'select',
-                  required: true,
-                  defaultValue: 'left',
-                  options: [
-                    { label: 'Left', value: 'left' },
-                    { label: 'Middle', value: 'middle' },
-                    { label: 'Right', value: 'right' },
-                  ],
-                },
-                {
                   name: 'size',
                   type: 'select',
                   required: true,
@@ -162,11 +158,6 @@ export const Pages: CollectionConfig = {
                     { label: 'Medium', value: 'medium' },
                     { label: 'Large', value: 'large' },
                   ],
-                },
-                {
-                  name: 'order',
-                  type: 'number',
-                  defaultValue: 0,
                 },
                 // BigText fields
                 {

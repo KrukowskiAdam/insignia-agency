@@ -59,19 +59,22 @@
 		return '#';
 	};
 
-	// Get cards from blocks and group by columns
+	// Get cards from blocks and auto-assign columns
 	function getCardsFromBlocks() {
 		const allCards: any[] = [];
 		blocks.forEach((block: any) => {
 			if (block.blockType === 'cards' && block.cards) {
 				// Convert Payload format to frontend format
-				const convertedCards = block.cards.map((card: any) => ({
+				const convertedCards = block.cards.map((card: any, index: number) => ({
 					...card,
 					id: card.id,
 					type: card.Enumeration?.replace('Block_', '') || card.type,
 					imageSrc: getMediaUrl(card.imageSrc),
 					videoWebm: getMediaUrl(card.videoWebm),
 					videoMp4: getMediaUrl(card.videoMp4),
+					// Auto-assign column based on index
+					column: ['left', 'middle', 'right'][index % 3],
+					order: Math.floor(index / 3), // row number
 				}));
 				allCards.push(...convertedCards);
 			}
@@ -81,9 +84,9 @@
 
 	const displayCards = $derived(getCardsFromBlocks());
 	const columns = $derived([
-		displayCards.filter((p: any) => p.column === 'left').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-		displayCards.filter((p: any) => p.column === 'middle').sort((a: any, b: any) => (a.order || 0) - (b.order || 0)),
-		displayCards.filter((p: any) => p.column === 'right').sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+		displayCards.filter((p: any) => p.column === 'left').sort((a: any, b: any) => a.order - b.order),
+		displayCards.filter((p: any) => p.column === 'middle').sort((a: any, b: any) => a.order - b.order),
+		displayCards.filter((p: any) => p.column === 'right').sort((a: any, b: any) => a.order - b.order)
 	]);
 
 	// Initialize Lenis for cards blocks
