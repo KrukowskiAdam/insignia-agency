@@ -55,7 +55,7 @@
 					<h2 class="section-title">{block.title}</h2>
 				{/if}
 				<div class="cards-grid">
-					{#each block.selectedCards as card}
+					{#each block.cards as card}
 						{@const cardType = card.Enumeration?.replace('Block_', '')}
 						{@const cardId = card.id}
 						

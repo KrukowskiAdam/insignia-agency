@@ -62,9 +62,9 @@
 	function getCardsFromBlocks() {
 		const allCards: Card[] = [];
 		blocks.forEach((block: any) => {
-			if (block.blockType === 'cards' && block.selectedCards) {
+			if (block.blockType === 'cards' && block.cards) {
 				// Convert Payload format to frontend format
-				const convertedCards = block.selectedCards.map((card: any) => ({
+				const convertedCards = block.cards.map((card: any) => ({
 					...card,
 					type: card.Enumeration?.replace('Block_', '') || card.type,
 					imageSrc: getMediaUrl(card.imageSrc),
