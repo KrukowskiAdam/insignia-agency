@@ -108,8 +108,8 @@
 						<div 
 							class="column"
 							style="flex-grow: {getColumnFlex(colIndex)};"
-							on:mouseenter={() => hoveredColumn = colIndex}
-							on:mouseleave={() => hoveredColumn = null}
+							onmouseenter={() => hoveredColumn = colIndex}
+							onmouseleave={() => hoveredColumn = null}
 							role="group"
 							bind:this={columnRefs[colIndex]}
 						>
