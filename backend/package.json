@@ -20,10 +20,12 @@
   "dependencies": {
     "@payloadcms/db-mongodb": "^3.64.0",
     "@payloadcms/next": "3.64.0",
+    "@payloadcms/plugin-cloud-storage": "^3.64.0",
     "@payloadcms/richtext-lexical": "3.64.0",
     "@payloadcms/storage-vercel-blob": "^3.64.0",
     "@payloadcms/ui": "3.64.0",
     "@testing-library/dom": "^10.4.1",
+    "cloudinary": "^2.8.0",
     "cross-env": "^7.0.3",
     "dompurify": "^3.1.7",
     "dotenv": "16.4.7",
