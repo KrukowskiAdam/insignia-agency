@@ -73,13 +73,16 @@
 			console.log('🔍 Checking block:', block.blockType, 'has cards?', !!block.cards);
 			if (block.blockType === 'cards' && block.cards) {
 				console.log('  ✅ Found cards block with', block.cards.length, 'cards');
-				// Convert Payload format to frontend format
-				const convertedCards = block.cards.map((card: any) => ({
+				// Convert Payload format to frontend format + auto-assign columns
+				const convertedCards = block.cards.map((card: any, index: number) => ({
 					...card,
 					type: card.Enumeration?.replace('Block_', '') || card.type,
 					imageSrc: getMediaUrl(card.imageSrc),
 					videoWebm: getMediaUrl(card.videoWebm),
 					videoMp4: getMediaUrl(card.videoMp4),
+					// Auto-assign column: 1st=left, 2nd=middle, 3rd=right, 4th=left, etc.
+					column: ['left', 'middle', 'right'][index % 3],
+					order: Math.floor(index / 3), // row number
 				}));
 				console.log('  📤 Converted cards:', convertedCards);
 				allCards.push(...convertedCards);
