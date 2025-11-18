@@ -261,7 +261,6 @@
 	}
 
 	.projects-page {
-		min-height: 100vh;
 		padding: 0;
 		font-family: 'Inter Tight', sans-serif;
 	}
