@@ -21,20 +21,29 @@ interface PayloadResponse {
 
 export const load: LayoutLoad = async ({ fetch }) => {
 	try {
-		const response = await fetch(`${API_URL}/api/menu?sort=order&limit=100`);
+		const [menuResponse, footerResponse] = await Promise.all([
+			fetch(`${API_URL}/api/menu?sort=order&limit=100`),
+			fetch(`${API_URL}/api/footer?limit=1`)
+		]);
 		
-		if (!response.ok) {
-			console.error('Failed to fetch menu:', response.statusText);
-			return { menu: [] };
+		if (!menuResponse.ok) {
+			console.error('Failed to fetch menu:', menuResponse.statusText);
 		}
 
-		const data: PayloadResponse = await response.json();
-		const menu: MenuItem[] = data.docs || [];
+		if (!footerResponse.ok) {
+			console.error('Failed to fetch footer:', footerResponse.statusText);
+		}
 
-		return { menu };
+		const menuData: PayloadResponse = menuResponse.ok ? await menuResponse.json() : { docs: [] };
+		const footerData: PayloadResponse = footerResponse.ok ? await footerResponse.json() : { docs: [] };
+		
+		const menu: MenuItem[] = menuData.docs || [];
+		const footer = footerData.docs?.[0] || null;
+
+		return { menu, footer };
 	} catch (error) {
-		console.error('Error loading menu:', error);
-		return { menu: [] };
+		console.error('Error loading layout data:', error);
+		return { menu: [], footer: null };
 	}
 };
 
