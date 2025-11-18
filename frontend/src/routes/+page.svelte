@@ -270,8 +270,9 @@
 		display: flex;
 		gap: 0.5rem;
 		width: 100%;
-		height: 100vh; /* Pełna wysokość viewport */
+		min-height: 100vh; /* Minimalna wysokość viewport */
 		padding: 0 0.5rem;
+		padding-bottom: 4rem; /* Przestrzeń na scroll w dół */
 		overflow: hidden;
 		box-sizing: border-box;
 	}
@@ -283,7 +284,7 @@
 		flex-shrink: 1;
 		flex-basis: 0;
 		transition: flex-grow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-		height: 100%;
+		min-height: 100vh;
 		overflow: hidden;
 		position: relative;
 	}
