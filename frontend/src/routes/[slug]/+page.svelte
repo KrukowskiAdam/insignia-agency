@@ -307,10 +307,10 @@
 	/* Cards Grid - 3 kolumny */
 	.cards-grid {
 		display: flex;
-		gap: 0.5rem;
+		gap: 3rem;
 		width: 100%;
 		height: 100vh;
-		padding: 0 0.5rem;
+		padding: 0 2rem;
 		overflow: hidden;
 		box-sizing: border-box;
 	}

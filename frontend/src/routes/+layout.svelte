@@ -102,14 +102,15 @@
 	:global(body) {
 		margin: 0;
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+		overflow-x: hidden;
 	}
 
 	main {
-		min-height: 80vh;
+		min-height: 100vh;
 	}
 
 	footer {
-		padding: 3rem 2rem;
+		padding: 2rem;
 		background: #f5f5f5;
 		color: #333;
 	}
@@ -120,40 +121,42 @@
 	}
 
 	.footer-logo {
-		max-width: 150px;
-		margin-bottom: 2rem;
+		max-width: 80px;
+		margin-bottom: 1rem;
 	}
 
 	.footer-main {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 2rem;
-		margin-bottom: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.footer-section h3 {
-		font-size: 1.25rem;
-		margin-bottom: 0.5rem;
+		font-size: 0.9rem;
+		margin-bottom: 0.25rem;
 		color: #000;
 	}
 
 	.footer-section h4 {
-		font-size: 0.9rem;
+		font-size: 0.75rem;
 		text-transform: uppercase;
-		letter-spacing: 1px;
-		margin-bottom: 0.75rem;
+		letter-spacing: 0.5px;
+		margin-bottom: 0.5rem;
 		color: #666;
 		font-weight: 600;
 	}
 
 	.footer-description {
 		color: #666;
-		line-height: 1.6;
+		line-height: 1.4;
+		font-size: 0.85rem;
 	}
 
 	.footer-section p {
-		margin: 0.25rem 0;
-		line-height: 1.6;
+		margin: 0.15rem 0;
+		line-height: 1.4;
+		font-size: 0.8rem;
 	}
 
 	.footer-section a {
@@ -169,21 +172,21 @@
 	.footer-links {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.25rem;
 	}
 
 	.social-links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 1rem;
+		gap: 0.5rem;
 	}
 
 	.social-link {
-		padding: 0.5rem 1rem;
+		padding: 0.25rem 0.5rem;
 		background: #fff;
 		border-radius: 4px;
 		text-transform: capitalize;
-		font-size: 0.9rem;
+		font-size: 0.75rem;
 		transition: background 0.2s;
 	}
 
@@ -192,12 +195,12 @@
 	}
 
 	.footer-bottom {
-		margin-top: 2rem;
-		padding-top: 2rem;
+		margin-top: 1rem;
+		padding-top: 1rem;
 		border-top: 1px solid #ddd;
 		text-align: center;
 		color: #666;
-		font-size: 0.9rem;
+		font-size: 0.75rem;
 	}
 
 	@media (max-width: 768px) {
