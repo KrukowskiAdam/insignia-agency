@@ -1,9 +1,7 @@
 import { Icon as Icon_a02a4abfb5c9da17149cbadc8057c129 } from '../../../components/Icon'
 import { Logo as Logo_919492c8e60179286a0f183c0a5b652e } from '../../../components/Logo'
-import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
 export const importMap = {
   "/components/Icon#Icon": Icon_a02a4abfb5c9da17149cbadc8057c129,
-  "/components/Logo#Logo": Logo_919492c8e60179286a0f183c0a5b652e,
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
+  "/components/Logo#Logo": Logo_919492c8e60179286a0f183c0a5b652e
 }
