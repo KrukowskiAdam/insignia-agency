@@ -34,12 +34,14 @@
 	// Use blocks from homepage ONLY
 	const homepage = $derived(data.homepage);
 	const blocks = $derived(homepage?.blocks || []);
+	const homepageColumns = $derived(homepage?.homepageColumns || null);
 
 	// Debug logs for browser console - inside $effect to work with reactive values
 	$effect(() => {
 		console.log("🏠 Homepage object:", homepage);
 		console.log("🧱 Blocks array:", blocks);
 		console.log("📦 Total blocks:", blocks.length);
+		console.log("🧊 Homepage columns group:", homepageColumns);
 
 		// Debug każdego bloku
 		blocks.forEach((block: any, index: number) => {
@@ -74,50 +76,39 @@
 		return "#";
 	}
 
-	// Group cards by columns from blocks
-	function getCardsFromBlocks() {
-		const allCards: Card[] = [];
-		blocks.forEach((block: any) => {
-			console.log(
-				"🔍 Checking block:",
-				block.blockType,
-				"has cards?",
-				!!block.cards,
-			);
-			if (block.blockType === "cards" && block.cards) {
-				console.log(
-					"  ✅ Found cards block with",
-					block.cards.length,
-					"cards",
-				);
-				// Convert Payload format to frontend format + auto-assign columns
-				const convertedCards = block.cards.map(
-					(card: any, index: number) => ({
-						...card,
-						type:
-							card.Enumeration?.replace("Block_", "") ||
-							card.type,
-						imageSrc: getMediaUrl(card.imageSrc),
-						videoWebm: getMediaUrl(card.videoWebm),
-						videoMp4: getMediaUrl(card.videoMp4),
-						// Auto-assign column: 1st=left, 2nd=middle, 3rd=right, 4th=left, etc.
-						column: ["left", "middle", "right"][index % 3],
-						order: Math.floor(index / 3), // row number
-					}),
-				);
-				console.log("  📤 Converted cards:", convertedCards);
-				allCards.push(...convertedCards);
-			}
-		});
-		console.log(
-			"🎯 Total cards from all blocks:",
-			allCards.length,
-			allCards,
-		);
-		return allCards;
+	function mapCards(cards: any[] = []): Card[] {
+		return cards.map((card: any, index: number) => ({
+			...card,
+			type: card.Enumeration?.replace("Block_", "") || card.type,
+			imageSrc: getMediaUrl(card.imageSrc),
+			videoWebm: getMediaUrl(card.videoWebm),
+			videoMp4: getMediaUrl(card.videoMp4),
+			column: ["left", "middle", "right"][index % 3],
+			order: Math.floor(index / 3),
+		}));
 	}
 
-	const displayCards = $derived(getCardsFromBlocks());
+	function getHomepageCards(): Card[] {
+		const groupCards = homepageColumns?.cards;
+		if (Array.isArray(groupCards) && groupCards.length > 0) {
+			console.log(
+				"🆕 Using cards from homepageColumns group:",
+				groupCards.length,
+			);
+			return mapCards(groupCards);
+		}
+
+		const legacyCards: any[] = [];
+		blocks.forEach((block: any) => {
+			if (block.blockType === "cards" && Array.isArray(block.cards)) {
+				legacyCards.push(...block.cards);
+			}
+		});
+		console.log("♻️ Fallback to legacy blocks cards:", legacyCards.length);
+		return mapCards(legacyCards);
+	}
+
+	const displayCards = $derived(getHomepageCards());
 
 	// Grupowanie projektów według kolumn
 	const columns = $derived([

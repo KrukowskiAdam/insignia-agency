@@ -68,6 +68,10 @@ interface Page {
 	};
 	content: string;
 	blocks?: any[];
+	homepageColumns?: {
+		title?: string;
+		cards?: any[];
+	};
 }
 
 interface PayloadResponse {
@@ -86,19 +90,19 @@ interface PayloadResponse {
 export const load: PageLoad = async ({ fetch }) => {
 	try {
 		console.log('🔄 Fetching homepage from:', `${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`);
-		
+
 		// Fetch homepage with timeout
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-		
+
 		const pageResponse = await fetch(
 			`${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`,
 			{ signal: controller.signal }
 		);
 		clearTimeout(timeoutId);
-		
+
 		let homepage: Page | null = null;
-		
+
 		if (pageResponse.ok) {
 			const pageData: PayloadResponse = await pageResponse.json();
 			console.log('✅ Response received:', pageData);
