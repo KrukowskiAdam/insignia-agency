@@ -1,5 +1,144 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 import { formatSlug } from '../utils/formatSlug'
+
+const cardFields: Field[] = [
+  {
+    name: 'Enumeration',
+    type: 'select',
+    required: true,
+    defaultValue: 'Block_BigText',
+    options: [
+      { label: 'Big Text', value: 'Block_BigText' },
+      { label: 'Description Text', value: 'Block_DescText' },
+      { label: 'Video', value: 'Block_Video' },
+      { label: 'Image', value: 'Block_Image' },
+    ],
+  },
+  {
+    name: 'size',
+    type: 'select',
+    required: true,
+    defaultValue: 'medium',
+    options: [
+      { label: 'Small', value: 'small' },
+      { label: 'Medium', value: 'medium' },
+      { label: 'Large', value: 'large' },
+    ],
+  },
+  {
+    name: 'titleLine1',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+    },
+  },
+  {
+    name: 'titleLine2',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+    },
+  },
+  {
+    name: 'titleColor',
+    type: 'select',
+    options: [
+      { label: 'Red', value: 'red' },
+      { label: 'Blue', value: 'blue' },
+      { label: 'Green', value: 'green' },
+    ],
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+    },
+  },
+  {
+    name: 'title',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+    },
+  },
+  {
+    name: 'description',
+    type: 'textarea',
+    admin: {
+      condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+    },
+  },
+  {
+    name: 'category',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => ['Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
+    },
+  },
+  {
+    name: 'imageSrc',
+    type: 'upload',
+    relationTo: 'media',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
+    },
+  },
+  {
+    name: 'imageAlt',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
+    },
+  },
+  {
+    name: 'videoWebm',
+    type: 'upload',
+    relationTo: 'media',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
+    },
+  },
+  {
+    name: 'videoMp4',
+    type: 'upload',
+    relationTo: 'media',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
+    },
+  },
+  {
+    name: 'footerTitle',
+    type: 'text',
+  },
+  {
+    name: 'footerDescription',
+    type: 'text',
+  },
+  {
+    name: 'buttonText',
+    type: 'text',
+  },
+  {
+    name: 'buttonColor',
+    type: 'select',
+    options: [
+      { label: 'Red', value: 'red' },
+      { label: 'Blue', value: 'blue' },
+      { label: 'Green', value: 'green' },
+    ],
+  },
+  {
+    name: 'buttonLinkType',
+    type: 'select',
+    options: [
+      { label: 'None', value: 'none' },
+      { label: 'External Link', value: 'external' },
+      { label: 'Internal Link', value: 'internal' },
+    ],
+    defaultValue: 'none',
+  },
+  {
+    name: 'buttonLinkValue',
+    type: 'text',
+  },
+]
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -122,164 +261,28 @@ export const Pages: CollectionConfig = {
             },
           ],
         },
+      ],
+    },
+    {
+      name: 'homepageColumns',
+      type: 'group',
+      admin: {
+        condition: (data) => Boolean(data?.isHomepage),
+        description: 'Available only on the homepage – controls the 3-column cards layout.',
+      },
+      fields: [
         {
-          slug: 'cards',
-          fields: [
-            {
-              name: 'title',
-              type: 'text',
-              admin: {
-                description: 'Section title (optional)',
-              },
-            },
-            {
-              name: 'cards',
-              type: 'array',
-              fields: [
-                {
-                  name: 'Enumeration',
-                  type: 'select',
-                  required: true,
-                  defaultValue: 'Block_BigText',
-                  options: [
-                    { label: 'Big Text', value: 'Block_BigText' },
-                    { label: 'Description Text', value: 'Block_DescText' },
-                    { label: 'Video', value: 'Block_Video' },
-                    { label: 'Image', value: 'Block_Image' },
-                  ],
-                },
-                {
-                  name: 'size',
-                  type: 'select',
-                  required: true,
-                  defaultValue: 'medium',
-                  options: [
-                    { label: 'Small', value: 'small' },
-                    { label: 'Medium', value: 'medium' },
-                    { label: 'Large', value: 'large' },
-                  ],
-                },
-                // BigText fields
-                {
-                  name: 'titleLine1',
-                  type: 'text',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
-                  },
-                },
-                {
-                  name: 'titleLine2',
-                  type: 'text',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
-                  },
-                },
-                {
-                  name: 'titleColor',
-                  type: 'select',
-                  options: [
-                    { label: 'Red', value: 'red' },
-                    { label: 'Blue', value: 'blue' },
-                    { label: 'Green', value: 'green' },
-                  ],
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
-                  },
-                },
-                // DescText, Video, Image fields
-                {
-                  name: 'title',
-                  type: 'text',
-                  admin: {
-                    condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
-                  },
-                },
-                {
-                  name: 'description',
-                  type: 'textarea',
-                  admin: {
-                    condition: (data, siblingData) => ['Block_DescText', 'Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
-                  },
-                },
-                {
-                  name: 'category',
-                  type: 'text',
-                  admin: {
-                    condition: (data, siblingData) => ['Block_Video', 'Block_Image'].includes(siblingData.Enumeration),
-                  },
-                },
-                // Image fields
-                {
-                  name: 'imageSrc',
-                  type: 'upload',
-                  relationTo: 'media',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
-                  },
-                },
-                {
-                  name: 'imageAlt',
-                  type: 'text',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Image',
-                  },
-                },
-                // Video fields
-                {
-                  name: 'videoWebm',
-                  type: 'upload',
-                  relationTo: 'media',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
-                  },
-                },
-                {
-                  name: 'videoMp4',
-                  type: 'upload',
-                  relationTo: 'media',
-                  admin: {
-                    condition: (data, siblingData) => siblingData.Enumeration === 'Block_Video',
-                  },
-                },
-                // Footer fields
-                {
-                  name: 'footerTitle',
-                  type: 'text',
-                },
-                {
-                  name: 'footerDescription',
-                  type: 'text',
-                },
-                {
-                  name: 'buttonText',
-                  type: 'text',
-                },
-                {
-                  name: 'buttonColor',
-                  type: 'select',
-                  options: [
-                    { label: 'Red', value: 'red' },
-                    { label: 'Blue', value: 'blue' },
-                    { label: 'Green', value: 'green' },
-                  ],
-                },
-                {
-                  name: 'buttonLinkType',
-                  type: 'select',
-                  options: [
-                    { label: 'None', value: 'none' },
-                    { label: 'External Link', value: 'external' },
-                    { label: 'Internal Link', value: 'internal' },
-                  ],
-                  defaultValue: 'none',
-                },
-                {
-                  name: 'buttonLinkValue',
-                  type: 'text',
-                },
-              ],
-            },
-          ],
+          name: 'title',
+          type: 'text',
+          admin: {
+            description: 'Optional heading displayed above the columns.',
+          },
+        },
+        {
+          name: 'cards',
+          type: 'array',
+          minRows: 1,
+          fields: cardFields,
         },
       ],
     },
