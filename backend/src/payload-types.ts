@@ -69,9 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    cards: Card;
     menu: Menu;
     pages: Page;
+    footer: Footer;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -81,9 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    cards: CardsSelect<false> | CardsSelect<true>;
     menu: MenuSelect<false> | MenuSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -174,59 +174,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cards".
- */
-export interface Card {
-  id: string;
-  /**
-   * Select card type - fields will change based on your selection
-   */
-  Enumeration: 'Block_BigText' | 'Block_DescText' | 'Block_Video' | 'Block_Image';
-  column: 'left' | 'middle' | 'right';
-  size: 'small' | 'medium' | 'large';
-  /**
-   * Display order (lower numbers appear first)
-   */
-  order?: number | null;
-  /**
-   * First line of title (only for BigText cards)
-   */
-  titleLine1?: string | null;
-  /**
-   * Second line of title (optional)
-   */
-  titleLine2?: string | null;
-  titleColor?: ('red' | 'blue' | 'green') | null;
-  title?: string | null;
-  description?: string | null;
-  category?: string | null;
-  imageSrc?: (string | null) | Media;
-  imageAlt?: string | null;
-  /**
-   * WebM video file
-   */
-  videoWebm?: (string | null) | Media;
-  /**
-   * MP4 video file (fallback)
-   */
-  videoMp4?: (string | null) | Media;
-  /**
-   * Button text (leave empty for no button)
-   */
-  buttonText?: string | null;
-  buttonColor?: ('red' | 'blue' | 'green') | null;
-  buttonLinkType?: ('none' | 'external' | 'internal') | null;
-  /**
-   * External: full URL with https://, Internal: path starting with /
-   */
-  buttonLinkValue?: string | null;
-  footerTitle?: string | null;
-  footerDescription?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "menu".
  */
 export interface Menu {
@@ -269,35 +216,56 @@ export interface Page {
    */
   isHomepage?: boolean | null;
   status: 'draft' | 'published';
-  blocks: (
-    | {
-        heading: string;
-        subheading?: string | null;
-        backgroundImage?: (string | null) | Media;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'hero';
-      }
-    | {
-        text: string;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'content';
-      }
-    | {
-        /**
-         * Section title (optional)
-         */
-        title?: string | null;
-        /**
-         * Select cards to display in this section
-         */
-        selectedCards: (string | Card)[];
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'cards';
-      }
-  )[];
+  blocks?:
+    | (
+        | {
+            heading: string;
+            subheading?: string | null;
+            backgroundImage?: (string | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'hero';
+          }
+        | {
+            text: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'content';
+          }
+      )[]
+    | null;
+  /**
+   * Available only on the homepage – controls the 3-column cards layout.
+   */
+  homepageColumns?: {
+    /**
+     * Optional heading displayed above the columns.
+     */
+    title?: string | null;
+    cards?:
+      | {
+          Enumeration: 'Block_BigText' | 'Block_DescText' | 'Block_Video' | 'Block_Image';
+          size: 'small' | 'medium' | 'large';
+          titleLine1?: string | null;
+          titleLine2?: string | null;
+          titleColor?: ('red' | 'blue' | 'green') | null;
+          title?: string | null;
+          description?: string | null;
+          category?: string | null;
+          imageSrc?: (string | null) | Media;
+          imageAlt?: string | null;
+          videoWebm?: (string | null) | Media;
+          videoMp4?: (string | null) | Media;
+          footerTitle?: string | null;
+          footerDescription?: string | null;
+          buttonText?: string | null;
+          buttonColor?: ('red' | 'blue' | 'green') | null;
+          buttonLinkType?: ('none' | 'external' | 'internal') | null;
+          buttonLinkValue?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   seo?: {
     /**
      * SEO title (optional, defaults to page title)
@@ -312,6 +280,70 @@ export interface Page {
      */
     metaImage?: (string | null) | Media;
   };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Global footer configuration - appears on all pages
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: string;
+  /**
+   * Internal title for admin panel
+   */
+  title: string;
+  /**
+   * Company name displayed in footer
+   */
+  companyName: string;
+  /**
+   * Short company description or tagline
+   */
+  description?: string | null;
+  address?: {
+    street?: string | null;
+    city?: string | null;
+    postalCode?: string | null;
+    country?: string | null;
+  };
+  contact?: {
+    email?: string | null;
+    phone?: string | null;
+  };
+  socialMedia?:
+    | {
+        platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'youtube' | 'tiktok';
+        /**
+         * Full URL to social media profile
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Footer navigation links
+   */
+  links?:
+    | {
+        label: string;
+        /**
+         * Internal path (e.g., /about) or external URL
+         */
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Copyright notice (e.g., "© 2025 Company Name. All rights reserved.")
+   */
+  copyrightText?: string | null;
+  /**
+   * Footer logo (optional)
+   */
+  logo?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -348,16 +380,16 @@ export interface PayloadLockedDocument {
         value: string | Media;
       } | null)
     | ({
-        relationTo: 'cards';
-        value: string | Card;
-      } | null)
-    | ({
         relationTo: 'menu';
         value: string | Menu;
       } | null)
     | ({
         relationTo: 'pages';
         value: string | Page;
+      } | null)
+    | ({
+        relationTo: 'footer';
+        value: string | Footer;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -445,34 +477,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cards_select".
- */
-export interface CardsSelect<T extends boolean = true> {
-  Enumeration?: T;
-  column?: T;
-  size?: T;
-  order?: T;
-  titleLine1?: T;
-  titleLine2?: T;
-  titleColor?: T;
-  title?: T;
-  description?: T;
-  category?: T;
-  imageSrc?: T;
-  imageAlt?: T;
-  videoWebm?: T;
-  videoMp4?: T;
-  buttonText?: T;
-  buttonColor?: T;
-  buttonLinkType?: T;
-  buttonLinkValue?: T;
-  footerTitle?: T;
-  footerDescription?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "menu_select".
  */
 export interface MenuSelect<T extends boolean = true> {
@@ -511,13 +515,33 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+      };
+  homepageColumns?:
+    | T
+    | {
+        title?: T;
         cards?:
           | T
           | {
+              Enumeration?: T;
+              size?: T;
+              titleLine1?: T;
+              titleLine2?: T;
+              titleColor?: T;
               title?: T;
-              selectedCards?: T;
+              description?: T;
+              category?: T;
+              imageSrc?: T;
+              imageAlt?: T;
+              videoWebm?: T;
+              videoMp4?: T;
+              footerTitle?: T;
+              footerDescription?: T;
+              buttonText?: T;
+              buttonColor?: T;
+              buttonLinkType?: T;
+              buttonLinkValue?: T;
               id?: T;
-              blockName?: T;
             };
       };
   seo?:
@@ -527,6 +551,47 @@ export interface PagesSelect<T extends boolean = true> {
         metaDescription?: T;
         metaImage?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  title?: T;
+  companyName?: T;
+  description?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        city?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  contact?:
+    | T
+    | {
+        email?: T;
+        phone?: T;
+      };
+  socialMedia?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  copyrightText?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
