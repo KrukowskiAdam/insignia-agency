@@ -8,16 +8,13 @@
 		isOpen: boolean;
 	}
 
-	let { imageSrc, imageAlt, category, title, description, isOpen }: Props = $props();
+	let { imageSrc, imageAlt, category, title, description, isOpen }: Props =
+		$props();
 </script>
 
 <div class="image-card-container">
 	<div class="slider-image" class:slide-out={isOpen}>
-		<img 
-			src={imageSrc} 
-			alt={imageAlt}
-			class="card-image"
-		/>
+		<img src={imageSrc} alt={imageAlt} class="card-image" />
 	</div>
 	<div class="slider-content">
 		<span class="category">{category}</span>
@@ -60,12 +57,6 @@
 		object-fit: cover;
 		z-index: 0;
 		border-radius: 8px;
-		filter: grayscale(100%);
-		transition: filter 0.6s ease;
-	}
-
-	.image-card-container:hover .card-image {
-		filter: grayscale(0%);
 	}
 
 	.slider-content {

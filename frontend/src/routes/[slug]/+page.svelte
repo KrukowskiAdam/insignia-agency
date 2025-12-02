@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Lenis from 'lenis';
-	import type { PageData } from './$types';
-	import BigTextCard from '../../components/BigTextCard.svelte';
-	import DescTextCard from '../../components/DescTextCard.svelte';
-	import VideoCard from '../../components/VideoCard.svelte';
-	import ImageCard from '../../components/ImageCard.svelte';
+	import type { PageData } from "./$types";
+	import BigTextCard from "../../components/BigTextCard.svelte";
+	import DescTextCard from "../../components/DescTextCard.svelte";
+	import VideoCard from "../../components/VideoCard.svelte";
+	import ImageCard from "../../components/ImageCard.svelte";
 
 	interface Props {
 		data: PageData;
@@ -13,69 +11,65 @@
 
 	let { data }: Props = $props();
 
-	const page = $derived(data.page);
-	const blocks = $derived(page.blocks || []);
+	const API_URL = "https://backend-isnisgnias-projects.vercel.app";
 
-	const API_URL = 'https://insignia-agency-production.up.railway.app';
+	const page = data.page;
+	const blocks = page?.blocks ?? [];
 
-	// Helper to get full media URL
 	function getMediaUrl(media: any): string {
-		if (!media) return '';
-		if (typeof media === 'string') return media.startsWith('http') ? media : `${API_URL}${media}`;
-		if (media.url) return media.url.startsWith('http') ? media.url : `${API_URL}${media.url}`;
-		return '';
+		if (!media) return "";
+		if (typeof media === "string") {
+			return media.startsWith("http") ? media : `${API_URL}${media}`;
+		}
+		if (media.url) {
+			return media.url.startsWith("http")
+				? media.url
+				: `${API_URL}${media.url}`;
+		}
+		return "";
 	}
 
-	let openCardId = $state<string | null>(null);
+	let openCardId = $state<string | number | null>(null);
 	let hoveredColumn = $state<number | null>(null);
-	let columnRefs: HTMLDivElement[] = [];
 
-	function toggleCard(id: string) {
+	function toggleCard(id: string | number) {
 		openCardId = openCardId === id ? null : id;
 	}
 
 	const getColumnFlex = (colIndex: number) => {
 		if (hoveredColumn === null) return 1;
-		if (hoveredColumn === colIndex) return 1.08;
-		return 0.97;
+		return hoveredColumn === colIndex ? 1.08 : 0.97;
 	};
 
-	// Helper functions for buttonLink validation
 	function isExternalLink(linkType: string, linkValue: string): boolean {
-		return linkType === 'external' && Boolean(linkValue && linkValue.trim() !== '');
+		return (
+			linkType === "external" && Boolean(linkValue && linkValue.trim())
+		);
 	}
 
 	function getValidLink(linkType: string, linkValue: string): string {
-		if (linkType === 'none' || !linkValue || !linkValue.trim()) return '#';
-		
-		const trimmedValue = linkValue.trim();
-		
-		if (linkType === 'external') {
-			return trimmedValue;
-		} else if (linkType === 'internal') {
-			return trimmedValue;
-		}
-		
-		return '#';
-	};
+		if (linkType === "none" || !linkValue || !linkValue.trim()) return "#";
+		return linkValue.trim();
+	}
 
-	// Get cards from blocks and auto-assign columns
 	function getCardsFromBlocks() {
 		const allCards: any[] = [];
 		blocks.forEach((block: any) => {
-			if (block.blockType === 'cards' && block.cards) {
-				// Convert Payload format to frontend format
-				const convertedCards = block.cards.map((card: any, index: number) => ({
-					...card,
-					id: card.id,
-					type: card.Enumeration?.replace('Block_', '') || card.type,
-					imageSrc: getMediaUrl(card.imageSrc),
-					videoWebm: getMediaUrl(card.videoWebm),
-					videoMp4: getMediaUrl(card.videoMp4),
-					// Auto-assign column based on index
-					column: ['left', 'middle', 'right'][index % 3],
-					order: Math.floor(index / 3), // row number
-				}));
+			if (block.blockType === "cards" && block.cards) {
+				const convertedCards = block.cards.map(
+					(card: any, index: number) => ({
+						...card,
+						id: card.id ?? `${block.id ?? "block"}-${index}`,
+						type:
+							card.Enumeration?.replace("Block_", "") ||
+							card.type,
+						imageSrc: getMediaUrl(card.imageSrc),
+						videoWebm: getMediaUrl(card.videoWebm),
+						videoMp4: getMediaUrl(card.videoMp4),
+						column: ["left", "middle", "right"][index % 3],
+						order: Math.floor(index / 3),
+					}),
+				);
 				allCards.push(...convertedCards);
 			}
 		});
@@ -84,53 +78,34 @@
 
 	const displayCards = $derived(getCardsFromBlocks());
 	const columns = $derived([
-		displayCards.filter((p: any) => p.column === 'left').sort((a: any, b: any) => a.order - b.order),
-		displayCards.filter((p: any) => p.column === 'middle').sort((a: any, b: any) => a.order - b.order),
-		displayCards.filter((p: any) => p.column === 'right').sort((a: any, b: any) => a.order - b.order)
+		displayCards
+			.filter((card: any) => card.column === "left")
+			.sort((a: any, b: any) => a.order - b.order),
+		displayCards
+			.filter((card: any) => card.column === "middle")
+			.sort((a: any, b: any) => a.order - b.order),
+		displayCards
+			.filter((card: any) => card.column === "right")
+			.sort((a: any, b: any) => a.order - b.order),
 	]);
-
-	// Initialize Lenis for cards blocks
-	onMount(() => {
-		const lenisInstances = columnRefs.map(columnEl => {
-			if (!columnEl) return null;
-			return new Lenis({
-				wrapper: columnEl,
-				content: columnEl.firstElementChild as HTMLElement,
-				duration: 0.8,
-				easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-				orientation: 'vertical',
-				smoothWheel: true,
-				wheelMultiplier: 1.5,
-				touchMultiplier: 2
-			});
-		}).filter(Boolean);
-
-		function raf(time: number) {
-			lenisInstances.forEach(lenis => lenis?.raf(time));
-			requestAnimationFrame(raf);
-		}
-
-		if (lenisInstances.length > 0) {
-			requestAnimationFrame(raf);
-		}
-
-		return () => {
-			lenisInstances.forEach(lenis => lenis?.destroy());
-		};
-	});
 </script>
 
 <svelte:head>
-	<title>{page.seo?.metaTitle || page.title}</title>
-	{#if page.seo?.metaDescription}
+	<title>{page?.seo?.metaTitle || page?.title}</title>
+	{#if page?.seo?.metaDescription}
 		<meta name="description" content={page.seo.metaDescription} />
 	{/if}
 </svelte:head>
 
 <div class="page">
 	{#each blocks as block}
-		{#if block.blockType === 'hero'}
-			<section class="hero" style={block.backgroundImage?.url ? `background-image: url(${block.backgroundImage.url})` : ''}>
+		{#if block.blockType === "hero"}
+			<section
+				class="hero"
+				style={block.backgroundImage?.url
+					? `background-image: url(${block.backgroundImage.url})`
+					: ""}
+			>
 				<div class="hero-content">
 					<h1>{block.heading}</h1>
 					{#if block.subheading}
@@ -138,105 +113,161 @@
 					{/if}
 				</div>
 			</section>
-		{:else if block.blockType === 'content'}
+		{:else if block.blockType === "content"}
 			<div class="content-block">
-				{@html block.text.replace(/\n/g, '<br>')}
+				{@html block.text ? block.text.replace(/\n/g, "<br>") : ""}
 			</div>
-		{:else if block.blockType === 'cards'}
+		{:else if block.blockType === "cards"}
 			<section class="cards-block-section">
 				<div class="cards-grid">
 					{#each columns as column, colIndex}
-						<div 
+						<div
 							class="column"
-							style="flex-grow: {getColumnFlex(colIndex)};"
-							onmouseenter={() => hoveredColumn = colIndex}
-							onmouseleave={() => hoveredColumn = null}
+							style={`flex-grow: ${getColumnFlex(colIndex)};`}
+							onmouseenter={() => (hoveredColumn = colIndex)}
+							onmouseleave={() => (hoveredColumn = null)}
 							role="group"
-							bind:this={columnRefs[colIndex]}
 						>
 							<div class="column-content">
 								{#each column as card}
 									<div class="card-wrapper">
-										{#if card.type === 'Video' || card.type === 'Image'}
-											<div 
-												class="project-card" 
-												class:open={openCardId === card.id}
-												class:size-small={card.size === 'small'}
-												class:size-medium={card.size === 'medium'}
-												class:size-large={card.size === 'large'}
-												onclick={() => toggleCard(card.id)}
-												onkeydown={(e) => e.key === 'Enter' && toggleCard(card.id)}
-												onmouseleave={() => openCardId = null}
+										{#if card.type === "Video" || card.type === "Image"}
+											<div
+												class="project-card"
+												class:open={openCardId ===
+													card.id}
+												class:size-small={card.size ===
+													"small"}
+												class:size-medium={card.size ===
+													"medium"}
+												class:size-large={card.size ===
+													"large"}
+												onclick={() =>
+													toggleCard(card.id)}
+												onkeydown={(e) =>
+													e.key === "Enter" &&
+													toggleCard(card.id)}
+												onmouseleave={() =>
+													(openCardId = null)}
 												role="button"
 												tabindex="0"
 											>
-												<div class="card-slider" class:open={openCardId === card.id}>
-													{#if card.type === 'Video'}
-														<VideoCard 
+												<div
+													class="card-slider"
+													class:open={openCardId ===
+														card.id}
+												>
+													{#if card.type === "Video"}
+														<VideoCard
 															videoWebm={card.videoWebm}
 															videoMp4={card.videoMp4}
-															category={card.category || ''}
-															title={card.title || ''}
-															description={card.description || ''}
-															isOpen={openCardId === card.id}
+															category={card.category ||
+																""}
+															title={card.title ||
+																""}
+															description={card.description ||
+																""}
+															isOpen={openCardId ===
+																card.id}
 														/>
 													{:else}
-														<ImageCard 
+														<ImageCard
 															imageSrc={card.imageSrc}
-															imageAlt={card.imageAlt || ''}
-															category={card.category || ''}
-															title={card.title || ''}
-															description={card.description || ''}
-															isOpen={openCardId === card.id}
+															imageAlt={card.imageAlt ||
+																""}
+															category={card.category ||
+																""}
+															title={card.title ||
+																""}
+															description={card.description ||
+																""}
+															isOpen={openCardId ===
+																card.id}
 														/>
 													{/if}
 												</div>
 											</div>
 										{:else}
-											<div 
-												class="project-card" 
-												class:size-small={card.size === 'small'}
-												class:size-medium={card.size === 'medium'}
-												class:size-large={card.size === 'large'}
+											<div
+												class="project-card"
+												class:size-small={card.size ===
+													"small"}
+												class:size-medium={card.size ===
+													"medium"}
+												class:size-large={card.size ===
+													"large"}
 											>
-												<div class="card-content no-slider">
-													{#if card.type === 'BigText'}
-														<BigTextCard 
-															titleLine1={card.titleLine1 || ''}
-															titleLine2={card.titleLine2 || ''}
-															titleColor={card.titleColor || 'red'}
+												<div
+													class="card-content no-slider"
+												>
+													{#if card.type === "BigText"}
+														<BigTextCard
+															titleLine1={card.titleLine1 ||
+																""}
+															titleLine2={card.titleLine2 ||
+																""}
+															titleColor={card.titleColor ||
+																"red"}
 														/>
-													{:else if card.type === 'DescText'}
-														<DescTextCard 
-															title={card.title || ''}
-															description={card.description || ''}
+													{:else}
+														<DescTextCard
+															title={card.title ||
+																""}
+															description={card.description ||
+																""}
 														/>
 													{/if}
 												</div>
 											</div>
 										{/if}
-										
+
 										<div class="card-footer">
 											<div class="footer-header">
-												<div class="footer-title-wrapper">
-													<img src="/dot.svg" alt="" class="footer-dot" />
-													<span class="footer-title">{card.footerTitle || ''}</span>
+												<div
+													class="footer-title-wrapper"
+												>
+													<img
+														src="/dot.svg"
+														alt=""
+														class="footer-dot"
+													/>
+													<span class="footer-title">
+														{card.footerTitle || ""}
+													</span>
 												</div>
 												{#if card.buttonText && card.buttonText.trim()}
-													<a 
-														href={getValidLink(card.buttonLinkType, card.buttonLinkValue)} 
-														class="footer-button" 
-														class:button-red={card.buttonColor === 'red'}
-														class:button-blue={card.buttonColor === 'blue'}
-														class:button-green={card.buttonColor === 'green'}
-														target={isExternalLink(card.buttonLinkType, card.buttonLinkValue) ? '_blank' : '_self'}
-														rel={isExternalLink(card.buttonLinkType, card.buttonLinkValue) ? 'noopener noreferrer' : ''}
+													<a
+														href={getValidLink(
+															card.buttonLinkType,
+															card.buttonLinkValue,
+														)}
+														class="footer-button"
+														class:button-red={card.buttonColor ===
+															"red"}
+														class:button-blue={card.buttonColor ===
+															"blue"}
+														class:button-green={card.buttonColor ===
+															"green"}
+														target={isExternalLink(
+															card.buttonLinkType,
+															card.buttonLinkValue,
+														)
+															? "_blank"
+															: "_self"}
+														rel={isExternalLink(
+															card.buttonLinkType,
+															card.buttonLinkValue,
+														)
+															? "noopener noreferrer"
+															: ""}
 													>
 														{card.buttonText}
 													</a>
 												{/if}
 											</div>
-											<h4 class="footer-description">{card.footerDescription || ''}</h4>
+											<h4 class="footer-description">
+												{card.footerDescription || ""}
+											</h4>
 										</div>
 									</div>
 								{/each}
@@ -257,7 +288,9 @@
 	}
 
 	.page {
-		font-family: 'Inter Tight', sans-serif;
+		font-family: "Inter Tight", sans-serif;
+		background: #fff;
+		color: #000;
 	}
 
 	.hero {
@@ -274,7 +307,7 @@
 	}
 
 	.hero::before {
-		content: '';
+		content: "";
 		position: absolute;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.5);
@@ -304,7 +337,6 @@
 		font-size: 1.1rem;
 	}
 
-	/* Cards Grid - 3 kolumny */
 	.cards-grid {
 		display: flex;
 		gap: 3rem;
@@ -321,10 +353,17 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
-		transition: flex-grow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 		height: 100%;
-		overflow: hidden;
 		position: relative;
+		overflow-y: auto;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		transition: flex-grow 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	.column::-webkit-scrollbar {
+		display: none;
 	}
 
 	.column-content {
@@ -457,20 +496,23 @@
 	@media (max-width: 1024px) {
 		.cards-grid {
 			flex-direction: column;
+			height: auto;
 		}
 
 		.column {
 			width: 100%;
+			height: auto;
 		}
 	}
 
-	@media (max-width: 768px) {
-		.hero h1 {
-			font-size: 2rem;
-		}
-
+	@media (max-width: 640px) {
 		.cards-grid {
 			gap: 1rem;
+			padding: 0 1rem;
+		}
+
+		.hero h1 {
+			font-size: 2rem;
 		}
 	}
 </style>
