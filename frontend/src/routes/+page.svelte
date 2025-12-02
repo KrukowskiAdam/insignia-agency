@@ -1,99 +1,119 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Lenis from 'lenis';
-	import BigTextCard from '../components/BigTextCard.svelte';
-	import DescTextCard from '../components/DescTextCard.svelte';
-	import VideoCard from '../components/VideoCard.svelte';
-	import ImageCard from '../components/ImageCard.svelte';
-	import type { Card } from './+page';
+	import BigTextCard from "../components/BigTextCard.svelte";
+	import DescTextCard from "../components/DescTextCard.svelte";
+	import VideoCard from "../components/VideoCard.svelte";
+	import ImageCard from "../components/ImageCard.svelte";
+	import type { Card } from "./+page";
 
 	interface Props {
 		data: {
 			cards: Card[];
 			homepage: any;
-		}
+		};
 	}
 
 	let { data }: Props = $props();
-	
-	console.log('🚀 DATA RECEIVED:', data);
-	console.log('🏠 HOMEPAGE:', data.homepage);
 
-	const API_URL = 'https://backend-isnisgnias-projects.vercel.app';
+	console.log("🚀 DATA RECEIVED:", data);
+	console.log("🏠 HOMEPAGE:", data.homepage);
+
+	const API_URL = "https://backend-isnisgnias-projects.vercel.app";
 
 	// Helper to get full media URL
 	function getMediaUrl(media: any): string {
-		if (!media) return '';
-		if (typeof media === 'string') return media.startsWith('http') ? media : `${API_URL}${media}`;
-		if (media.url) return media.url.startsWith('http') ? media.url : `${API_URL}${media.url}`;
-		return '';
+		if (!media) return "";
+		if (typeof media === "string")
+			return media.startsWith("http") ? media : `${API_URL}${media}`;
+		if (media.url)
+			return media.url.startsWith("http")
+				? media.url
+				: `${API_URL}${media.url}`;
+		return "";
 	}
 
 	// Use blocks from homepage ONLY
 	const homepage = $derived(data.homepage);
 	const blocks = $derived(homepage?.blocks || []);
-	
+
 	// Debug logs for browser console - inside $effect to work with reactive values
 	$effect(() => {
-		console.log('🏠 Homepage object:', homepage);
-		console.log('🧱 Blocks array:', blocks);
-		console.log('📦 Total blocks:', blocks.length);
-		
+		console.log("🏠 Homepage object:", homepage);
+		console.log("🧱 Blocks array:", blocks);
+		console.log("📦 Total blocks:", blocks.length);
+
 		// Debug każdego bloku
 		blocks.forEach((block: any, index: number) => {
 			console.log(`📋 Block ${index}:`, block.blockType, block);
-			if (block.blockType === 'cards') {
+			if (block.blockType === "cards") {
 				console.log(`  └─ Cards w bloku:`, block.cards);
 			}
 		});
 	});
 
-	let hoveredColumn = $state<number | null>(null);
 	let openCardId = $state<number | null>(null);
-	let columnRefs: HTMLDivElement[] = [];
 
 	// Helper functions for buttonLink validation
 	function isExternalLink(linkType: string, linkValue: string): boolean {
-		return linkType === 'external' && Boolean(linkValue && linkValue.trim() !== '');
+		return (
+			linkType === "external" &&
+			Boolean(linkValue && linkValue.trim() !== "")
+		);
 	}
 
 	function getValidLink(linkType: string, linkValue: string): string {
-		if (linkType === 'none' || !linkValue || !linkValue.trim()) return '#';
-		
+		if (linkType === "none" || !linkValue || !linkValue.trim()) return "#";
+
 		const trimmedValue = linkValue.trim();
-		
-		if (linkType === 'external') {
+
+		if (linkType === "external") {
 			return trimmedValue;
-		} else if (linkType === 'internal') {
+		} else if (linkType === "internal") {
 			return trimmedValue;
 		}
-		
-		return '#';
+
+		return "#";
 	}
 
 	// Group cards by columns from blocks
 	function getCardsFromBlocks() {
 		const allCards: Card[] = [];
 		blocks.forEach((block: any) => {
-			console.log('🔍 Checking block:', block.blockType, 'has cards?', !!block.cards);
-			if (block.blockType === 'cards' && block.cards) {
-				console.log('  ✅ Found cards block with', block.cards.length, 'cards');
+			console.log(
+				"🔍 Checking block:",
+				block.blockType,
+				"has cards?",
+				!!block.cards,
+			);
+			if (block.blockType === "cards" && block.cards) {
+				console.log(
+					"  ✅ Found cards block with",
+					block.cards.length,
+					"cards",
+				);
 				// Convert Payload format to frontend format + auto-assign columns
-				const convertedCards = block.cards.map((card: any, index: number) => ({
-					...card,
-					type: card.Enumeration?.replace('Block_', '') || card.type,
-					imageSrc: getMediaUrl(card.imageSrc),
-					videoWebm: getMediaUrl(card.videoWebm),
-					videoMp4: getMediaUrl(card.videoMp4),
-					// Auto-assign column: 1st=left, 2nd=middle, 3rd=right, 4th=left, etc.
-					column: ['left', 'middle', 'right'][index % 3],
-					order: Math.floor(index / 3), // row number
-				}));
-				console.log('  📤 Converted cards:', convertedCards);
+				const convertedCards = block.cards.map(
+					(card: any, index: number) => ({
+						...card,
+						type:
+							card.Enumeration?.replace("Block_", "") ||
+							card.type,
+						imageSrc: getMediaUrl(card.imageSrc),
+						videoWebm: getMediaUrl(card.videoWebm),
+						videoMp4: getMediaUrl(card.videoMp4),
+						// Auto-assign column: 1st=left, 2nd=middle, 3rd=right, 4th=left, etc.
+						column: ["left", "middle", "right"][index % 3],
+						order: Math.floor(index / 3), // row number
+					}),
+				);
+				console.log("  📤 Converted cards:", convertedCards);
 				allCards.push(...convertedCards);
 			}
 		});
-		console.log('🎯 Total cards from all blocks:', allCards.length, allCards);
+		console.log(
+			"🎯 Total cards from all blocks:",
+			allCards.length,
+			allCards,
+		);
 		return allCards;
 	}
 
@@ -101,43 +121,16 @@
 
 	// Grupowanie projektów według kolumn
 	const columns = $derived([
-		displayCards.filter(p => p.column === 'left').sort((a, b) => a.order - b.order),
-		displayCards.filter(p => p.column === 'middle').sort((a, b) => a.order - b.order),
-		displayCards.filter(p => p.column === 'right').sort((a, b) => a.order - b.order)
+		displayCards
+			.filter((p) => p.column === "left")
+			.sort((a, b) => a.order - b.order),
+		displayCards
+			.filter((p) => p.column === "middle")
+			.sort((a, b) => a.order - b.order),
+		displayCards
+			.filter((p) => p.column === "right")
+			.sort((a, b) => a.order - b.order),
 	]);
-
-	onMount(() => {
-		// Initialize Lenis for each column
-		const lenisInstances = columnRefs.map(columnEl => {
-			return new Lenis({
-				wrapper: columnEl,
-				content: columnEl.firstElementChild as HTMLElement,
-				duration: 0.8,
-				easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-				orientation: 'vertical',
-				smoothWheel: true,
-				wheelMultiplier: 1.5,
-				touchMultiplier: 2
-			});
-		});
-
-		function raf(time: number) {
-			lenisInstances.forEach(lenis => lenis.raf(time));
-			requestAnimationFrame(raf);
-		}
-
-		requestAnimationFrame(raf);
-
-		return () => {
-			lenisInstances.forEach(lenis => lenis.destroy());
-		};
-	});
-
-	const getColumnFlex = (colIndex: number) => {
-		if (hoveredColumn === null) return 1;
-		if (hoveredColumn === colIndex) return 1.08;
-		return 0.97;
-	};
 
 	const toggleCard = (id: number) => {
 		if (openCardId === id) {
@@ -149,117 +142,140 @@
 
 	const getColor = (color: string | undefined) => {
 		const colorMap: Record<string, string> = {
-			red: 'var(--color-red)',
-			blue: 'var(--color-blue)',
-			green: 'var(--color-green)'
+			red: "var(--color-red)",
+			blue: "var(--color-blue)",
+			green: "var(--color-green)",
 		};
-		return colorMap[color || 'red'] || 'var(--color-red)';
+		return colorMap[color || "red"] || "var(--color-red)";
 	};
 </script>
 
 <div class="projects-page">
 	<div class="grid">
-		{#each columns as column, colIndex}
-			<div 
-				class="column"
-				style="flex-grow: {getColumnFlex(colIndex)};"
-				onmouseenter={() => hoveredColumn = colIndex}
-				onmouseleave={() => hoveredColumn = null}
-				role="group"
-				bind:this={columnRefs[colIndex]}
-			>
+		{#each columns as column}
+			<div class="column" role="group">
 				<div class="column-content">
-				{#each column as project}
-				<div class="card-wrapper">
-					{#if project.type === 'Video' || project.type === 'Image'}
-					<div 
-						class="project-card" 
-						class:open={openCardId === project.id}
-						class:size-small={project.size === 'small'}
-						class:size-medium={project.size === 'medium'}
-						class:size-large={project.size === 'large'}
-						onclick={() => toggleCard(project.id)}
-						onkeydown={(e) => e.key === 'Enter' && toggleCard(project.id)}
-						onmouseleave={() => openCardId = null}
-						role="button"
-						tabindex="0"
-					>
-							<div class="card-slider" class:open={openCardId === project.id}>
-								{#if project.type === 'Video'}
-									<VideoCard 
-											videoWebm={project.videoWebm}
-											videoMp4={project.videoMp4}
-											category={project.category}
-											title={project.title}
-											description={project.description}
-											isOpen={openCardId === project.id}
-										/>
-									{:else}
-										<ImageCard 
-											imageSrc={project.imageSrc}
-											imageAlt={project.imageAlt}
-											category={project.category}
-											title={project.title}
-											description={project.description}
-											isOpen={openCardId === project.id}
-									/>
-								{/if}
-							</div>
-						</div>
-					{:else}
-						<div 
-							class="project-card" 
-							class:size-small={project.size === 'small'}
-							class:size-medium={project.size === 'medium'}
-							class:size-large={project.size === 'large'}
-						>
-							<div class="card-content no-slider">
-								{#if project.type === 'BigText'}
-									<BigTextCard 
-										titleLine1={project.titleLine1}
-										titleLine2={project.titleLine2}
-										titleColor={project.titleColor}
-									/>
-								{:else}
-									<DescTextCard 
-										title={project.title}
-										description={project.description}
-									/>
-								{/if}
-							</div>
-						</div>
-					{/if}
-					<div class="card-footer">
-							<div class="footer-header">
-								<div class="footer-title-wrapper">
-									<img src="/dot.svg" alt="" class="footer-dot" />
-									<span class="footer-title">{project.footerTitle}</span>
-								</div>
-								{#if project.buttonText && project.buttonText.trim()}
-									<a 
-										href={getValidLink(project.buttonLinkType, project.buttonLinkValue)} 
-										class="footer-button" 
-										class:button-red={project.buttonColor === 'red'}
-										class:button-blue={project.buttonColor === 'blue'}
-										class:button-green={project.buttonColor === 'green'}
-										target={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? '_blank' : '_self'}
-										rel={isExternalLink(project.buttonLinkType, project.buttonLinkValue) ? 'noopener noreferrer' : ''}
+					{#each column as project}
+						<div class="card-wrapper">
+							{#if project.type === "Video" || project.type === "Image"}
+								<div
+									class="project-card"
+									class:open={openCardId === project.id}
+									class:size-small={project.size === "small"}
+									class:size-medium={project.size ===
+										"medium"}
+									class:size-large={project.size === "large"}
+									onclick={() => toggleCard(project.id)}
+									onkeydown={(e) =>
+										e.key === "Enter" &&
+										toggleCard(project.id)}
+									onmouseleave={() => (openCardId = null)}
+									role="button"
+									tabindex="0"
+								>
+									<div
+										class="card-slider"
+										class:open={openCardId === project.id}
 									>
-										{project.buttonText}
-									</a>
-								{/if}
+										{#if project.type === "Video"}
+											<VideoCard
+												videoWebm={project.videoWebm}
+												videoMp4={project.videoMp4}
+												category={project.category}
+												title={project.title}
+												description={project.description}
+												isOpen={openCardId ===
+													project.id}
+											/>
+										{:else}
+											<ImageCard
+												imageSrc={project.imageSrc}
+												imageAlt={project.imageAlt}
+												category={project.category}
+												title={project.title}
+												description={project.description}
+												isOpen={openCardId ===
+													project.id}
+											/>
+										{/if}
+									</div>
+								</div>
+							{:else}
+								<div
+									class="project-card"
+									class:size-small={project.size === "small"}
+									class:size-medium={project.size ===
+										"medium"}
+									class:size-large={project.size === "large"}
+								>
+									<div class="card-content no-slider">
+										{#if project.type === "BigText"}
+											<BigTextCard
+												titleLine1={project.titleLine1}
+												titleLine2={project.titleLine2}
+												titleColor={project.titleColor}
+											/>
+										{:else}
+											<DescTextCard
+												title={project.title}
+												description={project.description}
+											/>
+										{/if}
+									</div>
+								</div>
+							{/if}
+							<div class="card-footer">
+								<div class="footer-header">
+									<div class="footer-title-wrapper">
+										<img
+											src="/dot.svg"
+											alt=""
+											class="footer-dot"
+										/>
+										<span class="footer-title"
+											>{project.footerTitle}</span
+										>
+									</div>
+									{#if project.buttonText && project.buttonText.trim()}
+										<a
+											href={getValidLink(
+												project.buttonLinkType,
+												project.buttonLinkValue,
+											)}
+											class="footer-button"
+											class:button-red={project.buttonColor ===
+												"red"}
+											class:button-blue={project.buttonColor ===
+												"blue"}
+											class:button-green={project.buttonColor ===
+												"green"}
+											target={isExternalLink(
+												project.buttonLinkType,
+												project.buttonLinkValue,
+											)
+												? "_blank"
+												: "_self"}
+											rel={isExternalLink(
+												project.buttonLinkType,
+												project.buttonLinkValue,
+											)
+												? "noopener noreferrer"
+												: ""}
+										>
+											{project.buttonText}
+										</a>
+									{/if}
+								</div>
+								<h4 class="footer-description">
+									{project.footerDescription}
+								</h4>
 							</div>
-							<h4 class="footer-description">{project.footerDescription}</h4>
 						</div>
-					</div>
-				{/each}
+					{/each}
 				</div>
 			</div>
 		{/each}
 	</div>
-	
-	<!-- Spacer dla footera - możesz tu później dodać więcej contentu -->
-	<div class="footer-spacer"></div>
 </div>
 
 <style>
@@ -271,7 +287,7 @@
 
 	.projects-page {
 		padding: 0;
-		font-family: 'Inter Tight', sans-serif;
+		font-family: "Inter Tight", sans-serif;
 		background: white;
 	}
 
@@ -280,7 +296,7 @@
 		display: flex;
 		gap: 3rem;
 		width: 100%;
-		height: 100vh; /* Pełna wysokość viewport */
+		height: 100vh; /* pełna wysokość viewportu */
 		padding: 0 2rem;
 		overflow: hidden;
 		box-sizing: border-box;
@@ -293,10 +309,16 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: 0;
-		transition: flex-grow 1.2s cubic-bezier(0.23, 1, 0.32, 1);
 		height: 100%;
-		overflow: hidden;
+		overflow-y: auto;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 		position: relative;
+	}
+
+	.column::-webkit-scrollbar {
+		display: none;
 	}
 
 	.column-content {
@@ -432,15 +454,8 @@
 		line-height: 1.3;
 	}
 
-	/* Spacer dla footera */
-	.footer-spacer {
-		min-height: 20vh;
-		background: transparent;
-	}
-
 	/* Responsive */
 	@media (max-width: 1024px) {
-
 		.grid {
 			flex-direction: column;
 		}
@@ -456,4 +471,3 @@
 		}
 	}
 </style>
-

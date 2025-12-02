@@ -85,12 +85,23 @@ interface PayloadResponse {
 
 export const load: PageLoad = async ({ fetch }) => {
 	try {
-		// Fetch homepage
-		const pageResponse = await fetch(`${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`);
+		console.log('🔄 Fetching homepage from:', `${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`);
+		
+		// Fetch homepage with timeout
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+		
+		const pageResponse = await fetch(
+			`${API_URL}/api/pages?where[isHomepage][equals]=true&where[status][equals]=published`,
+			{ signal: controller.signal }
+		);
+		clearTimeout(timeoutId);
+		
 		let homepage: Page | null = null;
 		
 		if (pageResponse.ok) {
 			const pageData: PayloadResponse = await pageResponse.json();
+			console.log('✅ Response received:', pageData);
 			if (pageData.docs && pageData.docs.length > 0) {
 				homepage = pageData.docs[0];
 				console.log('📄 Homepage data:', homepage);
@@ -98,11 +109,13 @@ export const load: PageLoad = async ({ fetch }) => {
 			} else {
 				console.log('⚠️ No homepage found with isHomepage=true');
 			}
+		} else {
+			console.error('❌ Response not OK:', pageResponse.status, pageResponse.statusText);
 		}
 
 		return { homepage };
 	} catch (error) {
-		console.error('Error loading homepage:', error);
+		console.error('❌ Error loading homepage:', error);
 		return { homepage: null };
 	}
 };
