@@ -128,6 +128,8 @@
 		}
 	};
 
+	let hoveredColumn = $state<number | null>(null);
+
 	const handleCardClick = (event: MouseEvent, id: number) => {
 		const target = event.target as HTMLElement | null;
 		if (target?.closest(".card-footer")) {
@@ -148,8 +150,16 @@
 
 <div class="projects-page">
 	<div class="grid">
-		{#each columns as column}
-			<div class="column" role="group">
+		{#each columns as column, columnIndex}
+			<div
+				class="column"
+				class:expanded={hoveredColumn === columnIndex}
+				class:collapsed={hoveredColumn !== null &&
+					hoveredColumn !== columnIndex}
+				onmouseenter={() => (hoveredColumn = columnIndex)}
+				onmouseleave={() => (hoveredColumn = null)}
+				role="group"
+			>
 				<div class="column-content">
 					{#each column as project}
 						<div class="card-wrapper">
@@ -352,25 +362,37 @@
 	.column {
 		display: flex;
 		flex-direction: column;
-		flex-grow: 1;
-		flex-shrink: 1;
-		flex-basis: 0;
+		flex: 1 1 0;
 		height: 100%;
 		overflow-y: auto;
 		scroll-behavior: smooth;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 		position: relative;
+		transition:
+			flex 0.35s ease,
+			transform 0.35s ease,
+			opacity 0.3s ease;
 	}
 
 	.column::-webkit-scrollbar {
 		display: none;
 	}
 
+	.column.expanded {
+		flex: 1.05 1 0;
+		transform: scale(1.005);
+	}
+
+	.column.collapsed {
+		flex: 0.95 1 0;
+		opacity: 0.95;
+	}
+
 	.column-content {
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
+		gap: 5rem;
 		padding: 0.5rem 0;
 	}
 
@@ -394,6 +416,27 @@
 
 	.project-card.interactive {
 		cursor: pointer;
+		position: relative;
+	}
+
+	.project-card.interactive::after {
+		content: "👆";
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		font-size: 1.5rem;
+		opacity: 0;
+		transform: translateY(-4px);
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease;
+		pointer-events: none;
+	}
+
+	.project-card.interactive:hover::after,
+	.project-card.interactive:focus-visible::after {
+		opacity: 0.85;
+		transform: translateY(0);
 	}
 
 	/* Różne rozmiary kart */
@@ -539,6 +582,15 @@
 
 		.column {
 			width: 100%;
+			flex: 1 1 auto;
+			transform: none;
+			opacity: 1;
+		}
+
+		.column.expanded,
+		.column.collapsed {
+			flex: 1 1 auto;
+			opacity: 1;
 		}
 	}
 

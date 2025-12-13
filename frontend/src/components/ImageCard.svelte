@@ -48,10 +48,6 @@
 		transform: translateX(-100%);
 	}
 
-	.image-card-container:hover .slider-image {
-		transform: translateX(-100%);
-	}
-
 	.card-image {
 		position: absolute;
 		top: 0;
