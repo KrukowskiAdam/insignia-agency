@@ -12,7 +12,7 @@ type CardType = 'BigText' | 'DescText' | 'Video' | 'Image';
 interface BaseCard {
 	id: number;
 	type: CardType;
-	column: 'left' | 'middle' | 'right';
+	column: 'left' | 'right';
 	size: 'small' | 'medium' | 'large';
 	footerTitle: string;
 	footerDescription: string;
