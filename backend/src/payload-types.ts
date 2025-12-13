@@ -92,6 +92,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {};
   globalsSelect: {};
   locale: null;
@@ -145,12 +146,12 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
+  | {
+    id: string;
+    createdAt?: string | null;
+    expiresAt: string;
+  }[]
+  | null;
   password?: string | null;
 }
 /**
@@ -217,23 +218,23 @@ export interface Page {
   isHomepage?: boolean | null;
   status: 'draft' | 'published';
   blocks?:
-    | (
-        | {
-            heading: string;
-            subheading?: string | null;
-            backgroundImage?: (string | null) | Media;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'hero';
-          }
-        | {
-            text: string;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'content';
-          }
-      )[]
-    | null;
+  | (
+    | {
+      heading: string;
+      subheading?: string | null;
+      backgroundImage?: (string | null) | Media;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'hero';
+    }
+    | {
+      text: string;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'content';
+    }
+  )[]
+  | null;
   /**
    * Available only on the homepage – controls the 3-column cards layout.
    */
@@ -243,28 +244,30 @@ export interface Page {
      */
     title?: string | null;
     cards?:
-      | {
-          Enumeration: 'Block_BigText' | 'Block_DescText' | 'Block_Video' | 'Block_Image';
-          size: 'small' | 'medium' | 'large';
-          titleLine1?: string | null;
-          titleLine2?: string | null;
-          titleColor?: ('red' | 'blue' | 'green') | null;
-          title?: string | null;
-          description?: string | null;
-          category?: string | null;
-          imageSrc?: (string | null) | Media;
-          imageAlt?: string | null;
-          videoWebm?: (string | null) | Media;
-          videoMp4?: (string | null) | Media;
-          footerTitle?: string | null;
-          footerDescription?: string | null;
-          buttonText?: string | null;
-          buttonColor?: ('red' | 'blue' | 'green') | null;
-          buttonLinkType?: ('none' | 'external' | 'internal') | null;
-          buttonLinkValue?: string | null;
-          id?: string | null;
-        }[]
-      | null;
+    | {
+      Enumeration: 'Block_BigText' | 'Block_DescText' | 'Block_Video' | 'Block_Image';
+      size: 'small' | 'medium' | 'large';
+      titleLine1?: string | null;
+      titleLine2?: string | null;
+      subtitle?: string | null;
+      subtitleColor?: ('red' | 'blue' | 'green') | null;
+      titleColor?: ('red' | 'blue' | 'green') | null;
+      title?: string | null;
+      description?: string | null;
+      category?: string | null;
+      imageSrc?: (string | null) | Media;
+      imageAlt?: string | null;
+      videoWebm?: (string | null) | Media;
+      videoMp4?: (string | null) | Media;
+      footerTitle?: string | null;
+      footerDescription?: string | null;
+      buttonText?: string | null;
+      buttonColor?: ('red' | 'blue' | 'green') | null;
+      buttonLinkType?: ('none' | 'external' | 'internal') | null;
+      buttonLinkValue?: string | null;
+      id?: string | null;
+    }[]
+    | null;
   };
   seo?: {
     /**
@@ -314,28 +317,28 @@ export interface Footer {
     phone?: string | null;
   };
   socialMedia?:
-    | {
-        platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'youtube' | 'tiktok';
-        /**
-         * Full URL to social media profile
-         */
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
+  | {
+    platform: 'facebook' | 'instagram' | 'linkedin' | 'twitter' | 'youtube' | 'tiktok';
+    /**
+     * Full URL to social media profile
+     */
+    url: string;
+    id?: string | null;
+  }[]
+  | null;
   /**
    * Footer navigation links
    */
   links?:
-    | {
-        label: string;
-        /**
-         * Internal path (e.g., /about) or external URL
-         */
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
+  | {
+    label: string;
+    /**
+     * Internal path (e.g., /about) or external URL
+     */
+    url: string;
+    id?: string | null;
+  }[]
+  | null;
   /**
    * Copyright notice (e.g., "© 2025 Company Name. All rights reserved.")
    */
@@ -355,14 +358,14 @@ export interface PayloadKv {
   id: string;
   key: string;
   data:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+  | {
+    [k: string]: unknown;
+  }
+  | unknown[]
+  | string
+  | number
+  | boolean
+  | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -371,26 +374,26 @@ export interface PayloadKv {
 export interface PayloadLockedDocument {
   id: string;
   document?:
-    | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: string | Media;
-      } | null)
-    | ({
-        relationTo: 'menu';
-        value: string | Menu;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: string | Page;
-      } | null)
-    | ({
-        relationTo: 'footer';
-        value: string | Footer;
-      } | null);
+  | ({
+    relationTo: 'users';
+    value: string | User;
+  } | null)
+  | ({
+    relationTo: 'media';
+    value: string | Media;
+  } | null)
+  | ({
+    relationTo: 'menu';
+    value: string | Menu;
+  } | null)
+  | ({
+    relationTo: 'pages';
+    value: string | Page;
+  } | null)
+  | ({
+    relationTo: 'footer';
+    value: string | Footer;
+  } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
@@ -411,14 +414,14 @@ export interface PayloadPreference {
   };
   key?: string | null;
   value?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+  | {
+    [k: string]: unknown;
+  }
+  | unknown[]
+  | string
+  | number
+  | boolean
+  | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -450,12 +453,12 @@ export interface UsersSelect<T extends boolean = true> {
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+  | T
+  | {
+    id?: T;
+    createdAt?: T;
+    expiresAt?: T;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -497,60 +500,62 @@ export interface PagesSelect<T extends boolean = true> {
   isHomepage?: T;
   status?: T;
   blocks?:
+  | T
+  | {
+    hero?:
     | T
     | {
-        hero?:
-          | T
-          | {
-              heading?: T;
-              subheading?: T;
-              backgroundImage?: T;
-              id?: T;
-              blockName?: T;
-            };
-        content?:
-          | T
-          | {
-              text?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
+      heading?: T;
+      subheading?: T;
+      backgroundImage?: T;
+      id?: T;
+      blockName?: T;
+    };
+    content?:
+    | T
+    | {
+      text?: T;
+      id?: T;
+      blockName?: T;
+    };
+  };
   homepageColumns?:
+  | T
+  | {
+    title?: T;
+    cards?:
     | T
     | {
-        title?: T;
-        cards?:
-          | T
-          | {
-              Enumeration?: T;
-              size?: T;
-              titleLine1?: T;
-              titleLine2?: T;
-              titleColor?: T;
-              title?: T;
-              description?: T;
-              category?: T;
-              imageSrc?: T;
-              imageAlt?: T;
-              videoWebm?: T;
-              videoMp4?: T;
-              footerTitle?: T;
-              footerDescription?: T;
-              buttonText?: T;
-              buttonColor?: T;
-              buttonLinkType?: T;
-              buttonLinkValue?: T;
-              id?: T;
-            };
-      };
+      Enumeration?: T;
+      size?: T;
+      titleLine1?: T;
+      titleLine2?: T;
+      subtitle?: T;
+      subtitleColor?: T;
+      titleColor?: T;
+      title?: T;
+      description?: T;
+      category?: T;
+      imageSrc?: T;
+      imageAlt?: T;
+      videoWebm?: T;
+      videoMp4?: T;
+      footerTitle?: T;
+      footerDescription?: T;
+      buttonText?: T;
+      buttonColor?: T;
+      buttonLinkType?: T;
+      buttonLinkValue?: T;
+      id?: T;
+    };
+  };
   seo?:
-    | T
-    | {
-        metaTitle?: T;
-        metaDescription?: T;
-        metaImage?: T;
-      };
+  | T
+  | {
+    metaTitle?: T;
+    metaDescription?: T;
+    metaImage?: T;
+  };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -563,33 +568,33 @@ export interface FooterSelect<T extends boolean = true> {
   companyName?: T;
   description?: T;
   address?:
-    | T
-    | {
-        street?: T;
-        city?: T;
-        postalCode?: T;
-        country?: T;
-      };
+  | T
+  | {
+    street?: T;
+    city?: T;
+    postalCode?: T;
+    country?: T;
+  };
   contact?:
-    | T
-    | {
-        email?: T;
-        phone?: T;
-      };
+  | T
+  | {
+    email?: T;
+    phone?: T;
+  };
   socialMedia?:
-    | T
-    | {
-        platform?: T;
-        url?: T;
-        id?: T;
-      };
+  | T
+  | {
+    platform?: T;
+    url?: T;
+    id?: T;
+  };
   links?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-        id?: T;
-      };
+  | T
+  | {
+    label?: T;
+    url?: T;
+    id?: T;
+  };
   copyrightText?: T;
   logo?: T;
   updatedAt?: T;
@@ -645,5 +650,5 @@ export interface Auth {
 
 
 declare module 'payload' {
-  export interface GeneratedTypes extends Config {}
+  export interface GeneratedTypes extends Config { }
 }
