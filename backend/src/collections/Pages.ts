@@ -41,7 +41,7 @@ const cardFields: Field[] = [
   },
   {
     name: 'subtitle',
-    type: 'text',
+    type: 'textarea',
     admin: {
       condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
     },

@@ -351,7 +351,7 @@
 	}
 
 	.project-card.size-large {
-		aspect-ratio: 9 / 16;
+		aspect-ratio: 4 / 5;
 		min-height: 480px;
 	}
 
@@ -446,8 +446,8 @@
 	.footer-description {
 		font-size: 0.85rem;
 		color: #999;
-		margin: 0;
-		font-weight: 600;
+		margin: 0.5rem 0 0 0;
+		font-weight: 200;
 		line-height: 1.3;
 	}
 

@@ -77,10 +77,12 @@
 	}
 
 	.preview-subtitle {
-		font-size: 0.5em;
-		font-weight: 500;
+		font-size: 2.5em;
+		font-weight: 700;
 		margin: 0;
 		text-align: center;
 		line-height: 1.2;
+		white-space: pre-line;
+		margin-top: 2rem;
 	}
 </style>
