@@ -128,6 +128,14 @@
 		}
 	};
 
+	const handleCardClick = (event: MouseEvent, id: number) => {
+		const target = event.target as HTMLElement | null;
+		if (target?.closest(".card-footer")) {
+			return;
+		}
+		toggleCard(id);
+	};
+
 	const getColor = (color: string | undefined) => {
 		const colorMap: Record<string, string> = {
 			red: "var(--color-red)",
@@ -147,13 +155,14 @@
 						<div class="card-wrapper">
 							{#if project.type === "Video" || project.type === "Image"}
 								<div
-									class="project-card"
+									class="project-card interactive"
 									class:open={openCardId === project.id}
 									class:size-small={project.size === "small"}
 									class:size-medium={project.size ===
 										"medium"}
 									class:size-large={project.size === "large"}
-									onclick={() => toggleCard(project.id)}
+									onclick={(event) =>
+										handleCardClick(event, project.id)}
 									onkeydown={(e) =>
 										e.key === "Enter" &&
 										toggleCard(project.id)}
@@ -187,6 +196,52 @@
 											/>
 										{/if}
 									</div>
+									<div class="card-footer">
+										<div class="footer-header">
+											<div class="footer-title-wrapper">
+												<img
+													src="/dot.svg"
+													alt=""
+													class="footer-dot"
+												/>
+												<span class="footer-title">
+													{project.footerTitle || ""}
+												</span>
+											</div>
+											{#if project.buttonText && project.buttonText.trim()}
+												<a
+													href={getValidLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)}
+													class="footer-button"
+													class:button-red={project.buttonColor ===
+														"red"}
+													class:button-blue={project.buttonColor ===
+														"blue"}
+													class:button-green={project.buttonColor ===
+														"green"}
+													target={isExternalLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)
+														? "_blank"
+														: "_self"}
+													rel={isExternalLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)
+														? "noopener noreferrer"
+														: ""}
+												>
+													{project.buttonText}
+												</a>
+											{/if}
+										</div>
+										<h4 class="footer-description">
+											{project.footerDescription || ""}
+										</h4>
+									</div>
 								</div>
 							{:else}
 								<div
@@ -213,54 +268,54 @@
 											/>
 										{/if}
 									</div>
+									<div class="card-footer">
+										<div class="footer-header">
+											<div class="footer-title-wrapper">
+												<img
+													src="/dot.svg"
+													alt=""
+													class="footer-dot"
+												/>
+												<span class="footer-title">
+													{project.footerTitle || ""}
+												</span>
+											</div>
+											{#if project.buttonText && project.buttonText.trim()}
+												<a
+													href={getValidLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)}
+													class="footer-button"
+													class:button-red={project.buttonColor ===
+														"red"}
+													class:button-blue={project.buttonColor ===
+														"blue"}
+													class:button-green={project.buttonColor ===
+														"green"}
+													target={isExternalLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)
+														? "_blank"
+														: "_self"}
+													rel={isExternalLink(
+														project.buttonLinkType,
+														project.buttonLinkValue,
+													)
+														? "noopener noreferrer"
+														: ""}
+												>
+													{project.buttonText}
+												</a>
+											{/if}
+										</div>
+										<h4 class="footer-description">
+											{project.footerDescription || ""}
+										</h4>
+									</div>
 								</div>
 							{/if}
-							<div class="card-footer">
-								<div class="footer-header">
-									<div class="footer-title-wrapper">
-										<img
-											src="/dot.svg"
-											alt=""
-											class="footer-dot"
-										/>
-										<span class="footer-title"
-											>{project.footerTitle}</span
-										>
-									</div>
-									{#if project.buttonText && project.buttonText.trim()}
-										<a
-											href={getValidLink(
-												project.buttonLinkType,
-												project.buttonLinkValue,
-											)}
-											class="footer-button"
-											class:button-red={project.buttonColor ===
-												"red"}
-											class:button-blue={project.buttonColor ===
-												"blue"}
-											class:button-green={project.buttonColor ===
-												"green"}
-											target={isExternalLink(
-												project.buttonLinkType,
-												project.buttonLinkValue,
-											)
-												? "_blank"
-												: "_self"}
-											rel={isExternalLink(
-												project.buttonLinkType,
-												project.buttonLinkValue,
-											)
-												? "noopener noreferrer"
-												: ""}
-										>
-											{project.buttonText}
-										</a>
-									{/if}
-								</div>
-								<h4 class="footer-description">
-									{project.footerDescription}
-								</h4>
-							</div>
 						</div>
 					{/each}
 				</div>
@@ -285,10 +340,10 @@
 	/* Grid 3-kolumnowy */
 	.grid {
 		display: flex;
-		gap: 3rem;
+		gap: 1rem;
 		width: 100%;
 		height: 100vh; /* pełna wysokość viewportu */
-		padding: 0 2rem;
+		padding: 0 1rem;
 		overflow: hidden;
 		box-sizing: border-box;
 		background: white;
@@ -315,7 +370,7 @@
 	.column-content {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 3rem;
 		padding: 0.5rem 0;
 	}
 
@@ -327,29 +382,34 @@
 	/* Projekt Card */
 	.project-card {
 		width: 100%;
+		margin: 0 auto;
 		flex-shrink: 0;
 		background: #fff;
 		position: relative;
-		overflow: hidden;
-		cursor: pointer;
 		transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		border-radius: 8px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.project-card.interactive {
+		cursor: pointer;
 	}
 
 	/* Różne rozmiary kart */
 	.project-card.size-small {
-		aspect-ratio: 1;
-		min-height: 320px;
+		aspect-ratio: 16 / 9;
+		min-height: 256px;
 	}
 
 	.project-card.size-medium {
-		aspect-ratio: 1;
-		min-height: 320px;
+		aspect-ratio: 4 / 3;
+		min-height: 256px;
 	}
 
 	.project-card.size-large {
-		aspect-ratio: 4 / 5;
-		min-height: 480px;
+		aspect-ratio: 1;
+		min-height: 384px;
 	}
 
 	.project-card.open {
@@ -365,6 +425,9 @@
 		container-type: inline-size;
 		margin-left: -1px;
 		backface-visibility: hidden;
+		flex: 1 1 auto;
+		overflow: hidden;
+		border-radius: 8px 8px 0 0;
 	}
 
 	/* Card Content bez slidera */
@@ -374,26 +437,42 @@
 		position: relative;
 		overflow: hidden;
 		border-radius: 8px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		flex: 1 1 auto;
 	}
 
-	/* Card Footer */
 	.card-footer {
 		padding: 0.75rem 0 1.5rem 0;
-		background: white;
+		background: #fff;
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
+		border-radius: 0 0 8px 8px;
+		position: relative;
+	}
+
+	.card-footer::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 97%;
+		height: 1px;
+		background: #f0f0f0;
 	}
 
 	.footer-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
 	}
 
 	.footer-title-wrapper {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.4rem;
 		flex: 0 0 70%;
 		max-width: 70%;
@@ -403,6 +482,7 @@
 		width: 0.5rem;
 		height: 0.5rem;
 		flex-shrink: 0;
+		margin-top: 0.1rem;
 	}
 
 	.footer-title {
@@ -422,10 +502,11 @@
 		text-decoration: none;
 		transition: color 0.2s ease;
 		line-height: 1;
+		padding-top: 0.1rem;
 	}
 
 	.footer-button:hover {
-		color: color-mix(in srgb, currentColor 90%, white 100%) !important;
+		color: color-mix(in srgb, currentColor 80%, white 20%);
 	}
 
 	.footer-button.button-red {
@@ -443,9 +524,11 @@
 	.footer-description {
 		font-size: 0.85rem;
 		color: #999;
-		margin: 0.5rem 0 0 0;
+		margin: 0;
 		font-weight: 200;
 		line-height: 1.3;
+		padding-left: 0.9rem;
+		width: 80%;
 	}
 
 	/* Responsive */

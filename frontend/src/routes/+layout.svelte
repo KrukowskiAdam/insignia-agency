@@ -1,8 +1,9 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import type { LayoutData } from './$types';
-	import type { Snippet } from 'svelte';
+	import favicon from "$lib/assets/favicon.svg";
+	import Navbar from "$lib/components/Navbar.svelte";
+	import { page } from "$app/stores";
+	import type { LayoutData } from "./$types";
+	import type { Snippet } from "svelte";
 
 	interface Props {
 		data: LayoutData;
@@ -11,6 +12,7 @@
 
 	let { children, data }: Props = $props();
 	const footer = $derived(data.footer);
+	const showFooter = $derived($page.url.pathname !== "/");
 </script>
 
 <svelte:head>
@@ -23,85 +25,112 @@
 	{@render children()}
 </main>
 
-<footer>
-	{#if footer}
-		<div class="footer-content">
-			{#if footer.logo?.url}
-				<img src={footer.logo.url} alt={footer.companyName} class="footer-logo" />
-			{/if}
-			
-			<div class="footer-main">
-				<div class="footer-section">
-					<h3>{footer.companyName}</h3>
-					{#if footer.description}
-						<p class="footer-description">{footer.description}</p>
+{#if showFooter}
+	<footer>
+		{#if footer}
+			<div class="footer-content">
+				{#if footer.logo?.url}
+					<img
+						src={footer.logo.url}
+						alt={footer.companyName}
+						class="footer-logo"
+					/>
+				{/if}
+
+				<div class="footer-main">
+					<div class="footer-section">
+						<h3>{footer.companyName}</h3>
+						{#if footer.description}
+							<p class="footer-description">
+								{footer.description}
+							</p>
+						{/if}
+					</div>
+
+					{#if footer.address?.street || footer.address?.city}
+						<div class="footer-section">
+							<h4>Adres</h4>
+							<p>
+								{#if footer.address.street}{footer.address
+										.street}<br />{/if}
+								{#if footer.address.postalCode}{footer.address
+										.postalCode}
+								{/if}
+								{#if footer.address.city}{footer.address
+										.city}{/if}
+								{#if footer.address.country}<br />{footer
+										.address.country}{/if}
+							</p>
+						</div>
+					{/if}
+
+					{#if footer.contact?.email || footer.contact?.phone}
+						<div class="footer-section">
+							<h4>Kontakt</h4>
+							{#if footer.contact.email}
+								<p>
+									<a href={`mailto:${footer.contact.email}`}
+										>{footer.contact.email}</a
+									>
+								</p>
+							{/if}
+							{#if footer.contact.phone}
+								<p>
+									<a href={`tel:${footer.contact.phone}`}
+										>{footer.contact.phone}</a
+									>
+								</p>
+							{/if}
+						</div>
+					{/if}
+
+					{#if footer.links && footer.links.length > 0}
+						<div class="footer-section">
+							<h4>Linki</h4>
+							<nav class="footer-links">
+								{#each footer.links as link}
+									<a href={link.url}>{link.label}</a>
+								{/each}
+							</nav>
+						</div>
+					{/if}
+
+					{#if footer.socialMedia && footer.socialMedia.length > 0}
+						<div class="footer-section">
+							<h4>Social Media</h4>
+							<div class="social-links">
+								{#each footer.socialMedia as social}
+									<a
+										href={social.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="social-link"
+									>
+										{social.platform}
+									</a>
+								{/each}
+							</div>
+						</div>
 					{/if}
 				</div>
 
-				{#if footer.address?.street || footer.address?.city}
-					<div class="footer-section">
-						<h4>Adres</h4>
-						<p>
-							{#if footer.address.street}{footer.address.street}<br />{/if}
-							{#if footer.address.postalCode}{footer.address.postalCode} {/if}
-							{#if footer.address.city}{footer.address.city}{/if}
-							{#if footer.address.country}<br />{footer.address.country}{/if}
-						</p>
-					</div>
-				{/if}
-
-				{#if footer.contact?.email || footer.contact?.phone}
-					<div class="footer-section">
-						<h4>Kontakt</h4>
-						{#if footer.contact.email}
-							<p><a href="mailto:{footer.contact.email}">{footer.contact.email}</a></p>
-						{/if}
-						{#if footer.contact.phone}
-							<p><a href="tel:{footer.contact.phone}">{footer.contact.phone}</a></p>
-						{/if}
-					</div>
-				{/if}
-
-				{#if footer.links && footer.links.length > 0}
-					<div class="footer-section">
-						<h4>Linki</h4>
-						<nav class="footer-links">
-							{#each footer.links as link}
-								<a href={link.url}>{link.label}</a>
-							{/each}
-						</nav>
-					</div>
-				{/if}
-
-				{#if footer.socialMedia && footer.socialMedia.length > 0}
-					<div class="footer-section">
-						<h4>Social Media</h4>
-						<div class="social-links">
-							{#each footer.socialMedia as social}
-								<a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link">
-									{social.platform}
-								</a>
-							{/each}
-						</div>
+				{#if footer.copyrightText}
+					<div class="footer-bottom">
+						<p>{footer.copyrightText}</p>
 					</div>
 				{/if}
 			</div>
-
-			{#if footer.copyrightText}
-				<div class="footer-bottom">
-					<p>{footer.copyrightText}</p>
-				</div>
-			{/if}
-		</div>
-	{:else}
-		<p>&copy; 2025 INSIGNIA - Agencja Marketingowa</p>
-	{/if}
-</footer>
+		{:else}
+			<p>&copy; 2025 INSIGNIA - Agencja Marketingowa</p>
+		{/if}
+	</footer>
+{/if}
 
 <style>
 	:global(body) {
 		margin: 0;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+			Oxygen, Ubuntu, Cantarell, sans-serif;
 		overflow-x: hidden;
 	}
 
@@ -166,7 +195,7 @@
 	}
 
 	.footer-section a:hover {
-		color: #3873A6;
+		color: #3873a6;
 	}
 
 	.footer-links {
