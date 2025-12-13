@@ -2,18 +2,22 @@
 	interface Props {
 		titleLine1: string;
 		titleLine2?: string;
-		titleColor: 'red' | 'blue' | 'green';
+		titleColor: "red" | "blue" | "green";
+		subtitle?: string;
+		subtitleColor?: "red" | "blue" | "green";
 	}
 
-	let { titleLine1, titleLine2, titleColor }: Props = $props();
+	let { titleLine1, titleLine2, titleColor, subtitle, subtitleColor }: Props =
+		$props();
 
-	const getColor = (color: string) => {
+	const getColor = (color?: string) => {
 		const colorMap: Record<string, string> = {
-			red: 'var(--color-red)',
-			blue: 'var(--color-blue)',
-			green: 'var(--color-green)'
+			red: "var(--color-red)",
+			blue: "var(--color-blue)",
+			green: "var(--color-green)",
 		};
-		return colorMap[color] || 'var(--color-red)';
+
+		return color ? colorMap[color] || colorMap.red : colorMap.red;
 	};
 </script>
 
@@ -24,6 +28,14 @@
 			<span class="title-line">{titleLine2}</span>
 		{/if}
 	</h3>
+	{#if subtitle}
+		<p
+			class="preview-subtitle"
+			style="color: {getColor(subtitleColor ?? titleColor)};"
+		>
+			{subtitle}
+		</p>
+	{/if}
 </div>
 
 <style>
@@ -32,6 +44,7 @@
 		height: 100%;
 		background: white;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		padding: 2rem;
@@ -42,6 +55,7 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
+		gap: 0.75rem;
 	}
 
 	.preview-title {
@@ -60,5 +74,13 @@
 
 	.title-line {
 		display: block;
+	}
+
+	.preview-subtitle {
+		font-size: 0.5em;
+		font-weight: 500;
+		margin: 0;
+		text-align: center;
+		line-height: 1.2;
 	}
 </style>

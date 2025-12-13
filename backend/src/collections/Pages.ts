@@ -40,6 +40,25 @@ const cardFields: Field[] = [
     },
   },
   {
+    name: 'subtitle',
+    type: 'text',
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+    },
+  },
+  {
+    name: 'subtitleColor',
+    type: 'select',
+    options: [
+      { label: 'Red', value: 'red' },
+      { label: 'Blue', value: 'blue' },
+      { label: 'Green', value: 'green' },
+    ],
+    admin: {
+      condition: (data, siblingData) => siblingData.Enumeration === 'Block_BigText',
+    },
+  },
+  {
     name: 'titleColor',
     type: 'select',
     options: [

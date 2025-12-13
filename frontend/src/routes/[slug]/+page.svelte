@@ -208,6 +208,11 @@
 																""}
 															titleColor={card.titleColor ||
 																"red"}
+															subtitle={card.subtitle ||
+																""}
+															subtitleColor={card.subtitleColor ||
+																card.titleColor ||
+																"red"}
 														/>
 													{:else}
 														<DescTextCard
@@ -443,6 +448,8 @@
 		display: flex;
 		align-items: center;
 		gap: 0.4rem;
+		flex: 0 0 50%;
+		max-width: 50%;
 	}
 
 	.footer-dot {
@@ -457,6 +464,7 @@
 		text-transform: uppercase;
 		letter-spacing: 1.2px;
 		font-weight: 500;
+		flex: 1;
 	}
 
 	.footer-button {
@@ -465,12 +473,12 @@
 		letter-spacing: 1.2px;
 		font-weight: 700;
 		text-decoration: none;
-		transition: opacity 0.3s ease;
+		transition: color 0.2s ease;
 		line-height: 1;
 	}
 
 	.footer-button:hover {
-		opacity: 0.8;
+		color: color-mix(in srgb, currentColor 80%, white 20%);
 	}
 
 	.footer-button.button-red {

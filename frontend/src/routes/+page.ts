@@ -28,6 +28,8 @@ interface BigTextCard extends BaseCard {
 	titleLine1: string;
 	titleLine2?: string;
 	titleColor: 'red' | 'blue' | 'green';
+	subtitle?: string;
+	subtitleColor?: 'red' | 'blue' | 'green';
 }
 
 interface DescTextCard extends BaseCard {
