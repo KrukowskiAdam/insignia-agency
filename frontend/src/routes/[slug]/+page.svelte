@@ -66,8 +66,8 @@
 						imageSrc: getMediaUrl(card.imageSrc),
 						videoWebm: getMediaUrl(card.videoWebm),
 						videoMp4: getMediaUrl(card.videoMp4),
-						column: ["left", "middle", "right"][index % 3],
-						order: Math.floor(index / 3),
+						column: ["left", "right"][index % 2],
+						order: Math.floor(index / 2),
 					}),
 				);
 				allCards.push(...convertedCards);
@@ -80,9 +80,6 @@
 	const columns = $derived([
 		displayCards
 			.filter((card: any) => card.column === "left")
-			.sort((a: any, b: any) => a.order - b.order),
-		displayCards
-			.filter((card: any) => card.column === "middle")
 			.sort((a: any, b: any) => a.order - b.order),
 		displayCards
 			.filter((card: any) => card.column === "right")
