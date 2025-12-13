@@ -10,13 +10,17 @@ cloudinary.config({
 
 export const cloudinaryAdapter: Adapter = () => ({
   name: 'cloudinary',
-  
+
   // Generate public URL for files
   generateURL: ({ filename }) => {
     // Cloudinary URL format with folder
     const publicId = filename.split('.')[0]
-    const extension = filename.split('.').pop()
-    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/insignia-media/${publicId}.${extension}`
+    const extension = (filename.split('.').pop() || '').toLowerCase()
+
+    const isVideo = ['mp4', 'webm', 'mov', 'mkv'].includes(extension)
+    const resourceSegment = isVideo ? 'video/upload' : 'image/upload'
+
+    const url = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resourceSegment}/insignia-media/${publicId}.${extension}`
     console.log('🔗 generateURL called for:', filename, '→', url)
     return url
   },
@@ -32,7 +36,7 @@ export const cloudinaryAdapter: Adapter = () => ({
       console.log('🔄 Cloudinary adapter uploading:', fileName)
 
       // Upload to Cloudinary
-      const result = await new Promise<{secure_url: string; width?: number; height?: number}>((resolve, reject) => {
+      const result = await new Promise<{ secure_url: string; width?: number; height?: number }>((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: 'insignia-media',
@@ -41,7 +45,7 @@ export const cloudinaryAdapter: Adapter = () => ({
           },
           (error, result) => {
             if (error) reject(error)
-            else resolve(result as {secure_url: string; width?: number; height?: number})
+            else resolve(result as { secure_url: string; width?: number; height?: number })
           }
         )
         uploadStream.end(fileBuffer)
@@ -66,7 +70,7 @@ export const cloudinaryAdapter: Adapter = () => ({
     try {
       const publicId = `insignia-media/${filename.split('.')[0]}`
       console.log('🗑️ Deleting from Cloudinary:', publicId)
-      
+
       await cloudinary.uploader.destroy(publicId)
       console.log('✅ Deleted from Cloudinary')
     } catch (error) {
