@@ -54,17 +54,17 @@ Railway ma natywne wsparcie dla Next.js przez Nixpacks - prostsze i szybsze niż
 ### 3. Po deployment
 
 1. **Sprawdź URL:**
-   - Odwiedź: `https://your-app.up.railway.app/admin`
+   - Odwiedź: `https://insignia-agency-production.up.railway.app/admin`
    - Zaloguj się: `krukowski.adam@gmail.com`
 
 2. **Zaktualizuj frontend `.env`:**
    ```
-   PUBLIC_PAYLOAD_URL=https://your-app.up.railway.app
+   PUBLIC_PAYLOAD_URL=https://insignia-agency-production.up.railway.app
    ```
 
 3. **Zredeploy frontend na Vercel:**
    - Push do GitHub
-   - Vercel automatycznie zredeploy
+   - Vercel automatycznie zredeploy z PUBLIC_PAYLOAD_URL ustawionym na domenę Railway
 
 ## 🚀 Dlaczego Nixpacks > Docker?
 
