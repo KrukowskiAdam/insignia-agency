@@ -47,7 +47,7 @@
 		position: absolute;
 		top: 0;
 		left: 0;
-		z-index: 2;
+		z-index: 3;
 		overflow: hidden;
 		border-radius: 8px;
 		transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
