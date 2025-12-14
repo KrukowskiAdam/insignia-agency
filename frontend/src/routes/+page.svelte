@@ -416,27 +416,6 @@
 
 	.project-card.interactive {
 		cursor: pointer;
-		position: relative;
-	}
-
-	.project-card.interactive::after {
-		content: "👆";
-		position: absolute;
-		top: 0.75rem;
-		right: 0.75rem;
-		font-size: 1.5rem;
-		opacity: 0;
-		transform: translateY(-4px);
-		transition:
-			opacity 0.2s ease,
-			transform 0.2s ease;
-		pointer-events: none;
-	}
-
-	.project-card.interactive:hover::after,
-	.project-card.interactive:focus-visible::after {
-		opacity: 0.85;
-		transform: translateY(0);
 	}
 
 	/* Różne rozmiary kart */
