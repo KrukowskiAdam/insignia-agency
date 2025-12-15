@@ -92,14 +92,14 @@
 	}
 
 	h3 {
-		font-size: 1.5rem;
+		font-size: 3rem;
 		font-weight: 700;
 		margin: 0;
 		line-height: 1.2;
 	}
 
 	p {
-		font-size: 1rem;
+		font-size: 1.5rem;
 		line-height: 1.6;
 		margin: 0;
 		color: #333;
