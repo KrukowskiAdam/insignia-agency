@@ -59,7 +59,7 @@
 	}
 
 	.preview-title {
-		font-size: clamp(2rem, 12vw, 5rem);
+		font-size: clamp(4rem, 12vw, 7rem);
 		font-weight: 700;
 		margin: 0;
 		line-height: 0.95;
@@ -77,7 +77,7 @@
 	}
 
 	.preview-subtitle {
-		font-size: 2.5em;
+		font-size: 2em;
 		font-weight: 700;
 		margin: 0;
 		text-align: center;
